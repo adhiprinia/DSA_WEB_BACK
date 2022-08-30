@@ -1,4 +1,5 @@
 export class CreateReferenceDetailDto {
+    dsaApplicantId:string
     readonly name:string;
     readonly relationshipWithApplicant:string;
     readonly mobileNo:string;
@@ -11,8 +12,6 @@ export class CreateReferenceDetailDto {
     readonly postOffice:string;
     readonly city:string;
     readonly district:string;
-    statusCode:string
-    statusName:string
     readonly state:string
     readonly country:string;
     readonly referenceDetailEntdBy:string;

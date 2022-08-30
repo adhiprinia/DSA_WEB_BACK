@@ -21,7 +21,7 @@ export class ApplicationStatusController {
     return this.applicationStatusService.findAll();
   }
   @Post('findProgressBar')
-  findProgressBar(@Body()id:string):Promise<ApiResponse<ApplicationStatus>> {
+  findProgressBar(@Body('dsaApplicantId')id:string):Promise<ApiResponse<ApplicationStatus>> {
     return this.applicationStatusService.findProgressBar(id);
   }
 

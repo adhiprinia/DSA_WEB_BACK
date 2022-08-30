@@ -72,16 +72,29 @@ export class ApplicationStatus {
         name:'previous_stage'
     })
     previousStage:string
+    @BeforeInsert()
+    beforeInsertPreviousStage(){
+        this.previousStage = "basicdetails";
+    }
 
     @Column({
         name:'status_code'
     })
     statusCode:string
+    @BeforeInsert()
+    beforeInsertStatusCode(){
+        this.statusCode = "basicdetails";
+    }
 
     @Column({
         name:'status_name'
     })
     statusName:string
+    @BeforeInsert()
+    beforeInsertStatusName(){
+        this.statusName = "basicdetailspending";
+    }
+
 
     @Column({
         name:'application_details_entd_by'

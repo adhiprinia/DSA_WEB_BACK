@@ -5,7 +5,8 @@ import { AddressDetail } from 'src/address_detail/entities/address_detail.entity
 import { ApplicationStatus } from 'src/application_status/entities/application_status.entity';
 import { BankDetail } from 'src/bank_detail/entities/bank_detail.entity';
 import { CONFIG } from 'src/config/config';
-import { ApiResponse, ApiResponseStatus } from 'src/config/response';
+import { ApiResponse, ApiResponseStatus, ErrorMessageType } from 'src/config/response';
+import { DirectorDetail } from 'src/director_detail/entities/director_detail.entity';
 import { DocumentUpload } from 'src/document_upload/entities/document_upload.entity';
 import { baseUrl } from 'src/localUrl/Url';
 import { ProgressBar } from 'src/progress_bar/entities/progress_bar.entity';
@@ -22,13 +23,23 @@ export class FactDsaApplicantDetailService {
   constructor(@InjectRepository(FactDsaApplicantDetail) private factDsaApplicantDetailRepository: Repository<FactDsaApplicantDetail>,
     @InjectRepository(AddressDetail) private addressDetailRepository: Repository<AddressDetail>,
     @InjectRepository(BankDetail) private bankDetailRepository: Repository<BankDetail>,
-    @InjectRepository(ReferenceDetail) private referenceDetailRepository: Repository<ReferenceDetail>,
     @InjectRepository(DocumentUpload) private documentUploadRepository: Repository<DocumentUpload>,
     @InjectRepository(ResourceInfo) private resourceInfoRepository: Repository<ResourceInfo>,
-    @InjectRepository(ApplicationStatus) private applicationStatusRepository: Repository<ApplicationStatus>  ) { }
-
+    @InjectRepository(ApplicationStatus) private applicationStatusRepository: Repository<ApplicationStatus>, ) { }
   async create(createFactDsaApplicantDetailDto: CreateFactDsaApplicantDetailDto): Promise<ApiResponse<FactDsaApplicantDetail>> {
     let fact_dsa_applicant_detail = new FactDsaApplicantDetail()
+    let mobile_number_exist = await this.factDsaApplicantDetailRepository.findOne({ where: { mobileNumber: createFactDsaApplicantDetailDto.mobileNumber } });
+    if (mobile_number_exist) {
+      let response: ApiResponse<FactDsaApplicantDetail> = {
+        status: ApiResponseStatus.ERROR,
+        error: {
+          type: ErrorMessageType.ERROR,
+          message: `The ${createFactDsaApplicantDetailDto.mobileNumber} is already exists`
+          // throw new HttpException("sd",404)
+        }
+      };
+      return response;
+    }
     let countval=await this.factDsaApplicantDetailRepository.count;
     fact_dsa_applicant_detail.fullName = createFactDsaApplicantDetailDto.fullName,
       fact_dsa_applicant_detail.userId = createFactDsaApplicantDetailDto.userId
@@ -56,16 +67,21 @@ export class FactDsaApplicantDetailService {
     bank_detail.dsaApplicantId = fact_dsa_applicant_detail.dsaApplicantId
     let saved_bank_detail = await this.bankDetailRepository.save(bank_detail)
 
-    ///reference detail 
-    let reference_detail = new ReferenceDetail()
-    reference_detail.dsaApplicantId = fact_dsa_applicant_detail.dsaApplicantId
-    let saved_reference_detail = await this.referenceDetailRepository.save(reference_detail)
-
+    // ///reference detail 
+    // for (let i = 1; i < 2; i++) {
+    //   let reference_detail = new ReferenceDetail()
+    //   reference_detail.dsaApplicantId = fact_dsa_applicant_detail.dsaApplicantId
+    //   let saved_address_detail = await this.addressDetailRepository.save(reference_detail)
+    // }
     ///document_upload
     let document_upload = new DocumentUpload()
     document_upload.dsaApplicantId = fact_dsa_applicant_detail.dsaApplicantId
     let saved_document_upload = await this.documentUploadRepository.save(document_upload)
 
+    // /// add director
+    // let director_detail = new DirectorDetail()
+    // director_detail.dsaApplicantId = fact_dsa_applicant_detail.dsaApplicantId
+    // let saved_director_detail = await this.directorDetailRepository.save(director_detail)
 
     //application status
     let application_status = new ApplicationStatus();

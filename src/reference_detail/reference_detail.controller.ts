@@ -15,19 +15,13 @@ export class ReferenceDetailController {
     return this.referenceDetailService.create(createReferenceDetailDto);
   }
 
-  @Post('findEnglish')
-  findEnglish():Promise<ApiResponse<ReferenceDetail[]>> {
-    return this.referenceDetailService.findEnglish();
-  }
+
   @Post('findAll')
   findAll():Promise<ApiResponse<ReferenceDetail[]>> {
     return this.referenceDetailService.findAll();
   }
 
-  @Post('findEnglish')
-  findHindi():Promise<ApiResponse<ReferenceDetail[]>> {
-    return this.referenceDetailService.findHindi();
-  }
+
 
   @Post('findOne')
   findOne(@Body() id: string):Promise<ApiResponse<ReferenceDetail>> {

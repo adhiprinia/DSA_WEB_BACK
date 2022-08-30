@@ -2,17 +2,6 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateFactDsaApplicantDetailDto {
     masterId:string;
-    ///
-    code:string
-    buttonTittle:string;
-    uiComponent:string;
-    uiLevel:string;
-    status:string;
-    stage:string;
-    statusCode:string;
-    statusName:string;
-    ///
-
 
 
     @ApiProperty()

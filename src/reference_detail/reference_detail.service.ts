@@ -11,6 +11,7 @@ export class ReferenceDetailService {
   constructor(@InjectRepository(ReferenceDetail)private referenceDetailRepository:Repository<ReferenceDetail> ){}
   async create(createReferenceDetailDto: CreateReferenceDetailDto):Promise<ApiResponse<ReferenceDetail>> {
     let reference_detail = new ReferenceDetail()
+    reference_detail.dsaApplicantId = createReferenceDetailDto.dsaApplicantId
     reference_detail.name = createReferenceDetailDto.name
     reference_detail.relationshipWithApplicant = createReferenceDetailDto.relationshipWithApplicant
     reference_detail.mobileNo = createReferenceDetailDto.mobileNo
@@ -48,36 +49,6 @@ export class ReferenceDetailService {
     }
     return response;
   }
-
-
-  async findEnglish():Promise<ApiResponse<ReferenceDetail[]>> {
-    let reference_detail_result = await this.referenceDetailRepository.find()
-    let responsData = [];
-    responsData.push({
-      "reference_detail_result":reference_detail_result,
-      "totalCount":reference_detail_result.length,
-    });
-    let response: ApiResponse<ReferenceDetail[]> = {
-      status: ApiResponseStatus.SUCCESS,
-      data: responsData
-    }
-    return response;
-  }
-
-  async findHindi():Promise<ApiResponse<ReferenceDetail[]>> {
-    let reference_detail_result = await this.referenceDetailRepository.find()
-    let responsData = [];
-    responsData.push({
-      "reference_detail_result":reference_detail_result,
-      "totalCount":reference_detail_result.length,
-    });
-    let response: ApiResponse<ReferenceDetail[]> = {
-      status: ApiResponseStatus.SUCCESS,
-      data: responsData
-    }
-    return response;
-  }
-
   async findOne(id: string): Promise<ApiResponse<ReferenceDetail>> {
     let reference_detail_result = await this.referenceDetailRepository.findOne({ where: { dsaApplicantId: id } });
     let response: ApiResponse<ReferenceDetail>;

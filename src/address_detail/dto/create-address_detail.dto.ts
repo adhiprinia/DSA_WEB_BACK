@@ -24,10 +24,6 @@ export class CreateAddressDetailDto {
     @ApiProperty()
     landMark:string;
     @ApiProperty()
-    statusName:string;
-    @ApiProperty()
-    statusCode:string;
-    @ApiProperty()
     readonly residentType:string;
     readonly addressType:string;
     readonly addressDetailEntdBy:string;

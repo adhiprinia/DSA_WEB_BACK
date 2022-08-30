@@ -13,9 +13,16 @@ import { DocumentUpload } from 'src/document_upload/entities/document_upload.ent
 import { ResourceInfo } from 'src/resource_info/entities/resource_info.entity';
 import { ProgressBar } from 'src/progress_bar/entities/progress_bar.entity';
 import { ApplicationStatus } from 'src/application_status/entities/application_status.entity';
+import { DirectorDetail } from 'src/director_detail/entities/director_detail.entity';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([FactDsaApplicantDetail,AddressDetail,BankDetail,ReferenceDetail,DocumentUpload,ResourceInfo,ApplicationStatus]),
+  imports:[TypeOrmModule.forFeature([FactDsaApplicantDetail,
+    AddressDetail,
+    BankDetail,
+    DocumentUpload,
+    ResourceInfo,
+    ApplicationStatus
+  ]),
   MulterModule.register({
     storage: diskStorage({
       destination:'./client',

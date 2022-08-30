@@ -207,47 +207,6 @@ export class FactDsaApplicantDetail {
     })
     cibilDateAndTime: string;
 
-
-
-    @Column({
-        name: 'code'
-    })
-    code: string;
-    @Column({
-        name: 'status_code'
-    })
-    statusCode: string;
-
-    @Column({
-        name: 'status_name'
-    })
-    statusName: string;
-
-    @Column({
-        name: 'button_tittle'
-    })
-    buttonTittle: string
-
-    @Column({
-        name: 'ui_component'
-    })
-    uiComponent: string
-
-    @Column({
-        name: 'ui_level'
-    })
-    uiLevel: string
-
-    @Column({
-        name: "status"
-    })
-    status: string;
-
-    @Column({
-        name: 'stage'
-    })
-    stage: string
-
     @Column({
         name: 'apllicant_details_entd_by'
     })

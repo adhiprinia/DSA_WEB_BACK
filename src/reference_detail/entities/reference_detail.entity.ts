@@ -13,16 +13,6 @@ export class ReferenceDetail {
     dsaApplicantId:string;
 
     @Column({
-        name:'status_code'
-    })
-    statusCode:string
-    
-    @Column({
-        name:'status_name'
-    })
-    statusName:string
-
-    @Column({
         name:'name'
     })
     name:string
@@ -91,6 +81,7 @@ export class ReferenceDetail {
         name:'country'
     })
     country:string
+
 
     @Column({
         name:'reference_details_entd_by'

@@ -132,7 +132,7 @@ export class EzfloIntegrateService {
 
 
       let mybody: sumbitApplication = {
-        "DSAOrReferral": "DSA",
+        "DSAOrReferral": fact_dsa_applicant_detail.partnerType,
         "MobileNo": fact_dsa_applicant_detail.mobileNumber,
         "EmailID": fact_dsa_applicant_detail.emailId,
         "PANNumber": fact_dsa_applicant_detail.panCard,

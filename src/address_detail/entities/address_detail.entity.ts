@@ -8,16 +8,6 @@ export class AddressDetail {
     addressDetailId:string;
 
     @Column({
-        name:'status_code'
-    })
-    statusCode:string
-    
-    @Column({
-        name:'status_name'
-    })
-    statusName:string
-
-    @Column({
         name:'dsa_applicant_id'
     })
     dsaApplicantId:string

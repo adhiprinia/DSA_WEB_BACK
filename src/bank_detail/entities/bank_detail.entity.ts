@@ -13,17 +13,7 @@ export class BankDetail {
         name:'dsa_applicant_id'
     })
     dsaApplicantId:string;
-
-    @Column({
-        name:'status_code'
-    })
-    statusCode:string
     
-    @Column({
-        name:'status_name'
-    })
-    statusName:string
-
     @Column({
         name:'cancelled_cheque'
     })

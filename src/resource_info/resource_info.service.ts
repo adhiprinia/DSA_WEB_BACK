@@ -85,7 +85,7 @@ export class ResourceInfoService {
     .innerJoinAndMapOne('key.ResourceInfo', ResourceInfo, 'resourceInfo', 'key.parentId = resourceInfo.childId')
     .where('resourceInfo.childId = key.parentId') // or you can change condition to 'key.userId = :userId' because of you have `userId` in Key
     .getMany(); 
-    console.log('resource_info_result',resource_info_result);
+    // console.log('resource_info_result',resource_info_result);
     let responsData = [];
     responsData.push({
       "resource_info_result":resource_info_result,

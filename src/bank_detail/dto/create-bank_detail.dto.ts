@@ -16,8 +16,6 @@ export class CreateBankDetailDto {
     readonly branchName:string;
     readonly micrNumber:string
     readonly noOfYearsOfRelationShipWithBank:string;
-    statusName:string
-    statusCode:string
     @ApiProperty() 
     @IsNotEmpty()
     readonly accountType:string;

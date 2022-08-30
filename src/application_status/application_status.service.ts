@@ -68,8 +68,8 @@ export class ApplicationStatusService {
       console.log("current_code", current_code)
       let progress_bar = await this.progressBarRepository.findOne({ where: { currentCode: current_code } })
       console.log(progress_bar)
-      if(progress_bar===null){
-        throw new HttpException("completed",404)
+      if (progress_bar === null) {
+        throw new HttpException("completed", 404)
       }
       else if (current_code === progress_bar.currentCode) {
         let application_status_results = await this.applicationStatusRepository
