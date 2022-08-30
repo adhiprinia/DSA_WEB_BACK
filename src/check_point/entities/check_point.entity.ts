@@ -70,7 +70,7 @@ export class CheckPoint {
 
     @Column({
         name:'check_point_entd_on',
-        default:()=>'NOW()'
+        default:()=>'NOW'
     })
     checkPointEntdOn:string;
 
@@ -81,7 +81,7 @@ export class CheckPoint {
 
     @Column({
         name:'check_point_mod_on',
-        default:()=>'NOW()'
+        default:()=>'NOW'
     })
     checkPointModOn:string;
 

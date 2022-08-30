@@ -81,17 +81,6 @@ export class DirectorDetailService {
 
 
   async update(updateDirectorDetailDto: UpdateDirectorDetailDto): Promise<ApiResponse<DirectorDetail>> {
-    let statuscodes = "";
-    let statusNames = ""
-    // switch (myParam) {
-    //   case "AD001":
-    //     statuscodes = 'addressdetailcompleted'
-    //     statusNames = 'addressdetailcompleted'
-    //     break;
-    //   default:
-    //     statuscodes = "addressdetailpending"
-    //     break;
-    // }
     let director_detail_result = await this.directorDetailRepository.findOne({ where: { dsaApplicantId: updateDirectorDetailDto.dsaApplicantId} });
     let director_detail_data = { ...director_detail_result, ...updateDirectorDetailDto };
     director_detail_data.dsaApplicantId = updateDirectorDetailDto.dsaApplicantId
@@ -114,14 +103,5 @@ export class DirectorDetailService {
   }
 
 
-  
-  // async remove(id: string): Promise<ApiResponse<DeleteResult>> {
-  //   let response: DeleteResult = await this.directorDetailRepository.delete({ directorDetailId: id });
-    
-  //   let result: ApiResponse<DeleteResult> = {
-  //     status: ApiResponseStatus.SUCCESS,
-  //     data: response
-  //   };
-  //   return result;
-  // }
+
 }

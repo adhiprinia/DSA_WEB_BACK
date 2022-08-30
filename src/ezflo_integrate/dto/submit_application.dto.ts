@@ -111,6 +111,7 @@ export interface sumbitApplication {
     name: string
     mobileNo: string
     companyEmail: string
+    
   }
 
   export interface  RelationshipType{

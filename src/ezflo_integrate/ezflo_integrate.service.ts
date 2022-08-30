@@ -11,6 +11,7 @@ import { BankDetail } from 'src/bank_detail/entities/bank_detail.entity';
 import { ReferenceDetail } from 'src/reference_detail/entities/reference_detail.entity';
 import { CONFIG } from 'src/config/config';
 import { addressType, referenceType, SuccessResponse, sumbitApplication } from './dto/submit_application.dto';
+import { DashBoardDto } from './dto/DashBoard.dto';
 
 @Injectable()
 export class EzfloIntegrateService {
@@ -33,15 +34,17 @@ export class EzfloIntegrateService {
     }
   }
 
-
   async ezfloPullQueryStatus(ezfloQueryStatus: EzfloQueryStatus) {
+    
     if (!ezfloQueryStatus.ApplicationID){
       throw new HttpException("please provide DSA APPLICATION ID",404);
     }
     try {
-      let ezflo_integrate_pull_query = await axios.post(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloPullOpenQueries`, {ApplicationID:ezfloQueryStatus.ApplicationID,QueryType : "External","QueryStatus" : "Open"},{ headers: { 
+      console.log(ezfloQueryStatus);
+      let ezflo_integrate_pull_query = await axios.post(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloPullOpenQueries`, ezfloQueryStatus,{ headers: { 
         'Content-Type': 'application/json'
       }});
+      console.log(ezflo_integrate_pull_query,"llllll")
       let response = {
         status: ApiResponseStatus.SUCCESS,
         data: ezflo_integrate_pull_query.data
@@ -59,40 +62,43 @@ export class EzfloIntegrateService {
     }
   }
 
-  async ezfloUpdateQueryStatus(ezfloQueryStatus: EzfloQueryStatus) {
+  async ezfloUpdateQueryStatus(ezfloQueryStatus) {
     try {
-      let ezflo_integrate_update_query = await axios.post(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloUpdateCaseQuery`, {ApplicantionId:ezfloQueryStatus.ApplicationID})
+      let ezflo_integrate_update_query = await axios.post(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloUpdateCaseQuery`, ezfloQueryStatus)
       let response = {
         status: ApiResponseStatus.SUCCESS,
         data: ezflo_integrate_update_query.data
       };
+      // console.log("[//",ezflo_integrate_update_query.data,"[//");
       return response;
     } catch (error) {
       console.log(error)
+      return error.response.data;
     }
   }
 
   async ezfloSubmitQueryStatus(ezfloQueryStatus: EzfloQueryStatus) {
-      console.log(ezfloQueryStatus.dsaApplicantId,'dwedewefc');
+    console.log(ezfloQueryStatus.dsaApplicantId,'dsaAppplicationID');
       if (!ezfloQueryStatus.dsaApplicantId){
         throw new HttpException("please provide DSA APPLICATION ID",404);
       }
       try {
       let fact_dsa_applicant_detail = await this.factDsaApplicantDetailRepository.findOne({ where: { dsaApplicantId: ezfloQueryStatus.dsaApplicantId } })
-      console.log(fact_dsa_applicant_detail)
+      // console.log(fact_dsa_applicant_detail)
 
-      let address_detail = await this.addressDetailRepository.findOne({ where: { dsaApplicantId: ezfloQueryStatus.dsaApplicantId } })
-      console.log(address_detail)
+      let address_details = await this.addressDetailRepository.find({ where: { dsaApplicantId: ezfloQueryStatus.dsaApplicantId } })
+      // console.log(address_detail)
 
       let bank_detail = await this.bankDetailRepository.findOne({ where: { dsaApplicantId: ezfloQueryStatus.dsaApplicantId } })
-      console.log(bank_detail)
+      // console.log(bank_detail)
 
-      let reference_detail = await this.referenceDetailRepository.findOne({ where: { dsaApplicantId: ezfloQueryStatus.dsaApplicantId } })
-      console.log(reference_detail)
+      let reference_details = await this.referenceDetailRepository.find({ where: { dsaApplicantId: ezfloQueryStatus.dsaApplicantId } })
+      // console.log(reference_detail)
 
-      let addresses: addressType[] = [];
+      // let addresses: addressType[] = [];
       /// mapping addresses
-      const mappedAddress: addressType = {
+    
+      const addresses: addressType[] = address_details.map(address_detail => ({
         addressType: address_detail.addressType,
         addressL1: address_detail.addressLine1,
         addressL2: address_detail.addressLine2,
@@ -105,18 +111,19 @@ export class EzfloIntegrateService {
         state: address_detail.state,
         country: address_detail.country,
         residenceType: address_detail.residentType
-      }
-      addresses.push(mappedAddress);
+      }));
+      // addresses.push(mappedAddress);
       ///
 
       // mapping refererenced
-      let references: referenceType[] = [];
-      const mappedReference: referenceType = {
+      // let references: referenceType[] = [];
+
+      const references: referenceType[] = reference_details.map( reference_detail => ({
         name: reference_detail.name,
         mobileNo: reference_detail.mobileNo,
         companyEmail: '',
-      }
-      references.push(mappedReference);
+      }));
+      // references.push(mappedReference);
       /// 
 
       /// mapping relations
@@ -134,8 +141,8 @@ export class EzfloIntegrateService {
         "addresses": addresses,
         "salutation": fact_dsa_applicant_detail.salutation,
         "name": fact_dsa_applicant_detail.fullName,
-        "photo": fact_dsa_applicant_detail.applicantPhoto,
-        "DOB": "",
+        "photo": "DMSID",
+        "DOB": fact_dsa_applicant_detail.dateOfBirth.toDateString(),
         "fatherName": fact_dsa_applicant_detail.fathersName,
         "gender": fact_dsa_applicant_detail.gender,
         "accountHolderName": bank_detail.accountHolder,
@@ -150,26 +157,6 @@ export class EzfloIntegrateService {
           /// not defined yet
         ],
         "ApplicantDetails": [
-          {
-            "applicantType": "",
-            "salutation": "",
-            "FullName": "",
-            "Position": "",
-            "Since": "",
-            "mobileNo": "",
-            "panNo": "",
-            "adhaarNo": ""
-          },
-          {
-            "applicantType": "",
-            "salutation": "",
-            "FullName": "",
-            "Position": "",
-            "Since": "",
-            "mobileNo": "",
-            "panNo": "",
-            "adhaarNo": ""
-          }
         ],
         "documents": [
           /* not now for demo */
@@ -190,12 +177,22 @@ export class EzfloIntegrateService {
         "legalDispute": fact_dsa_applicant_detail.legalDispute,
         "legalDescription": "legal Description ",
         "DSANumber": "",
-        "DMSReferenceNumber": "",
+        "DMSReferenceNumber": fact_dsa_applicant_detail.dsaApplicantId,
         "RMCode": "353",
         "ZMCode": "354"
       }
+      //
+      // console.log("\n//////]\n",JSON.stringify(mybody,null,3),"\n//////]\n");
+      //
+      console.log(ezfloQueryStatus.dsaApplicantId,"ezfloQueryStatus.dsaApplicantId");
+
       let ezflo_integrate_submit_query = await axios.post<SuccessResponse>(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloSubmit`, mybody)
-      let applicant_id = ezflo_integrate_submit_query.data["Application No"];
+
+      console.log(JSON.stringify(mybody,null,3));
+      /*
+        neeed to check the below line if response changes
+      */
+      let applicant_id = ezflo_integrate_submit_query.data["Application_No"];
       console.log(applicant_id)
       let fact_dsa_applicant_detail_save = await this.factDsaApplicantDetailRepository
       .createQueryBuilder()
@@ -205,13 +202,39 @@ export class EzfloIntegrateService {
           applicantId:applicant_id
         })
       .execute()
+
+      console.log("applicant_id",applicant_id);
       let response = {
         status: ApiResponseStatus.SUCCESS,
         data: ezflo_integrate_submit_query.data
       };
       return response;
     } catch (error) {
-      console.log(error)
+      console.log(error);
+      console.log(JSON.stringify(error,null,3));
+      return error?.response?.data;
+    }
+  }
+
+  async getDashboard(dashBoardDto : DashBoardDto){
+    if (!dashBoardDto.ApplicationID){
+      throw new HttpException("please provide ApplicationID",404);
+    }
+      try {
+        let ezflo_integrate_pull_query = await axios.post(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloPullOpenQueries`, dashBoardDto ,{ headers: { 
+          'Content-Type': 'application/json'
+        }});
+        let applicationDetails = await axios.post(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloApplicationStatus`, {ApplicationID:dashBoardDto.ApplicationID},{ headers: { 
+          'Content-Type': 'application/json'
+        }});
+        const body = {...ezflo_integrate_pull_query.data, ...applicationDetails.data};
+        console.log(ezflo_integrate_pull_query.data,applicationDetails.data);
+        console.log(body);
+        return body;
+    }
+    catch(err){
+      console.log(err);
+      return err.response.data;
     }
   }
 }

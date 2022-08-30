@@ -12,23 +12,19 @@ export class ProgressBarController {
     return this.progressBarService.create(createProgressBarDto);
   }
 
-  @Post('findProgress')
-  findAll(@Body('mobileNumber')mobileNumber:string) {
-    return this.progressBarService.findAll(mobileNumber);
-  }
+  // @Post('findProgress')
+  // findAll(@Body('mobileNumber')mobileNumber:string) {
+  //   return this.progressBarService.findAll(mobileNumber);
+  // }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.progressBarService.findOne(+id);
-  }
+  //  @Post('findOne')
+  // findOne(@Body('dsaApplicantId') dsaApplicantId: string) {
+  //   return this.progressBarService.findOne(dsaApplicantId);
+  // }
 
-  @Post('update')
-  update(@Body() updateProgressBarDto: UpdateProgressBarDto) {
-    return this.progressBarService.update(updateProgressBarDto);
-  }
+  // @Post('update')
+  // update(@Body() updateProgressBarDto: UpdateProgressBarDto) {
+  //   return this.progressBarService.update(updateProgressBarDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.progressBarService.remove(+id);
-  }
 }

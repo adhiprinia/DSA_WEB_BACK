@@ -3,7 +3,7 @@ import { CreateProgressBarDto } from './create-progress_bar.dto';
 
 export class UpdateProgressBarDto extends PartialType(CreateProgressBarDto) {
     progressBarId:string;
-    mobileNumber:string;
+    dsaApplicantId:string;
     progressBarModBy:string;
     progressBarModOn:Date;
 }

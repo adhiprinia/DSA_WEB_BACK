@@ -10,7 +10,7 @@ import { AddressDetail } from './entities/address_detail.entity';
 export class AddressDetailService {
   constructor(@InjectRepository(AddressDetail)private addressDetailRepository:Repository<AddressDetail>){}
   async create(createAddressDetailDto: CreateAddressDetailDto):Promise<ApiResponse<AddressDetail>> {
-   console.log(createAddressDetailDto,"aaaaaaaa")
+
     let address_detail = new AddressDetail()
     address_detail.addressLine1 = createAddressDetailDto.addressLine1
     address_detail.addressLine2 = createAddressDetailDto.addressLine2
@@ -49,9 +49,10 @@ export class AddressDetailService {
   }
 
   async findById(id: string): Promise<ApiResponse<AddressDetail>> {
-    console.log(id,"????????????")
+   
     let address_detail_result = await this.addressDetailRepository.find({ where: { dsaApplicantId:id} });
     let response: ApiResponse<AddressDetail>;
+    console.log(address_detail_result,"AAAAAAAAAA")
     if (address_detail_result) {
       response = {
         status: ApiResponseStatus.SUCCESS,
@@ -68,18 +69,6 @@ export class AddressDetailService {
 
 
   async update(updateAddressDetailDto: UpdateAddressDetailDto): Promise<ApiResponse<AddressDetail>> {
-    let myParam = updateAddressDetailDto.statusCode;
-    let statuscodes = "";
-    let statusNames = ""
-    switch (myParam) {
-      case "AD001":
-        statuscodes = 'addressdetailcompleted'
-        statusNames = 'addressdetailcompleted'
-        break;
-      default:
-        statuscodes = "addressdetailpending"
-        break;
-    }
     let address_detail_result = await this.addressDetailRepository.findOne({ where: { dsaApplicantId: updateAddressDetailDto.dsaApplicantId ,addressType:updateAddressDetailDto.addressType} });
     let address_detail_data = { ...address_detail_result, ...updateAddressDetailDto };
     address_detail_data.addressLine1 = updateAddressDetailDto.addressLine1
@@ -90,14 +79,13 @@ export class AddressDetailService {
     address_detail_data.district = updateAddressDetailDto.district
     address_detail_data.state = updateAddressDetailDto.state
     address_detail_data.country = updateAddressDetailDto.country
-    address_detail_data.statusName = statusNames
-    address_detail_data.statusCode = statuscodes
     address_detail_data.residentType = updateAddressDetailDto.residentType
     address_detail_data.addressType = updateAddressDetailDto.addressType
     address_detail_data.landMark = updateAddressDetailDto . landMark
     address_detail_data.addressDetailModBy = updateAddressDetailDto.addressDetailModBy
     address_detail_data.addressDetailModOn = updateAddressDetailDto.addressDetailModOn
     let updated_address_detail_data = await this.addressDetailRepository.save(address_detail_data);
+  
     let response: ApiResponse<AddressDetail> = {
       status: ApiResponseStatus.SUCCESS,
       data: updated_address_detail_data

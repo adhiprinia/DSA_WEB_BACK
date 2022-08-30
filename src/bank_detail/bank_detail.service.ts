@@ -80,18 +80,6 @@ export class BankDetailService {
   }
 
   async update(updateBankDetailDto: UpdateBankDetailDto): Promise<ApiResponse<BankDetail>> {
-    let myParam = updateBankDetailDto.statusCode;
-    let statuscodes = "";
-    let statusNames = ""
-    switch (myParam) {
-      case "BK001":
-        statuscodes = 'bankdetailcompleted'
-        statusNames = 'bankdetailcompleted'
-        break;
-      default:
-        statuscodes = "bankdetailpending"
-        break;
-    }
     let bank_detail_result = await this.bankDetailRepository.findOne({ where: { dsaApplicantId: updateBankDetailDto.dsaApplicantId } });
     let bank_detail_data = { ...bank_detail_result, ...updateBankDetailDto };
     bank_detail_data.ifscCode = updateBankDetailDto.ifscCode
@@ -100,11 +88,8 @@ export class BankDetailService {
     bank_detail_data.branchName = updateBankDetailDto.branchName
     bank_detail_data.micrNumber = updateBankDetailDto.micrNumber
     bank_detail_data.noOfYearsOfRelationShipWithBank = updateBankDetailDto.noOfYearsOfRelationShipWithBank
-    // bank_detail_data.statusCode = statuscodes
-    // bank_detail_data.statusName = statusNames
     bank_detail_data.accountType = updateBankDetailDto.accountType
     bank_detail_data.accountHolder = updateBankDetailDto.accountHolder
-    // bank_detail_data.bankDetailModBy = updateBankDetailDto.bankDetailModBy
     bank_detail_data.bankDetailModOn = updateBankDetailDto.bankDetailModOn
 
     let updated_transaction = await this.bankDetailRepository.save(bank_detail_data);

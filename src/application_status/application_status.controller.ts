@@ -6,7 +6,7 @@ import { CreateApplicationStatusDto } from './dto/create-application_status.dto'
 import { UpdateApplicationStatusDto } from './dto/update-application_status.dto';
 import { ApplicationStatus } from './entities/application_status.entity';
 
-@Controller('application-status')
+@Controller('application_status')
 export class ApplicationStatusController {
   constructor(private readonly applicationStatusService: ApplicationStatusService) {}
 
@@ -17,27 +17,22 @@ export class ApplicationStatusController {
   }
 
   @Post('findAll')
-  findEnglish():Promise<ApiResponse<ApplicationStatus[]>> {
-    return this.applicationStatusService.findEnglish();
+  findAll():Promise<ApiResponse<ApplicationStatus[]>> {
+    return this.applicationStatusService.findAll();
+  }
+  @Post('findProgressBar')
+  findProgressBar(@Body()id:string):Promise<ApiResponse<ApplicationStatus>> {
+    return this.applicationStatusService.findProgressBar(id);
   }
 
-  @Post('findAll')
-  findHindi():Promise<ApiResponse<ApplicationStatus[]>> {
-    return this.applicationStatusService.findHindi();
-  }
 
-  @Post('findOne')
-  findOne(@Body('referenceDetailId') id: string):Promise<ApiResponse<ApplicationStatus>> {
-    return this.applicationStatusService.findOne(id);
+  @Post('progressBar')
+  progressBar(@Body('dsaApplicantId') id: string):Promise<ApiResponse<ApplicationStatus>> {
+    return this.applicationStatusService.progressBar(id);
   }
 
   @Post('update')
   update(@Body() updateApplicationStatusDto: UpdateApplicationStatusDto):Promise<ApiResponse<ApplicationStatus>> {
     return this.applicationStatusService.update(updateApplicationStatusDto);
-  }
-
-  @Post('delete')
-  remove(@Body('referenceDetailId') id: string) :Promise<ApiResponse<DeleteResult>>{
-    return this.applicationStatusService.remove(id);
   }
 }

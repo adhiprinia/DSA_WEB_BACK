@@ -96,19 +96,6 @@ export class ReferenceDetailService {
   }
 
   async update(updateReferenceDetailDto: UpdateReferenceDetailDto): Promise<ApiResponse<ReferenceDetail>> {
-
-    let myParam = updateReferenceDetailDto.statusCode;
-    let statuscodes = "";
-    let statusNames = ""
-    switch (myParam) {
-      case "RF001":
-        statuscodes = 'addressdetailcompleted'
-        statusNames = 'addressdetailcompleted'
-        break;
-      default:
-        statuscodes = "addressdetailpending"
-        break;
-    }
     let reference_detail_result = await this.referenceDetailRepository.findOne({ where: { dsaApplicantId: updateReferenceDetailDto.dsaApplicantId } });
     let reference_detail_data = { ...reference_detail_result, ...updateReferenceDetailDto };
     reference_detail_data.name = updateReferenceDetailDto.name
@@ -126,8 +113,6 @@ export class ReferenceDetailService {
     reference_detail_data.state = updateReferenceDetailDto.state
     reference_detail_data.country = updateReferenceDetailDto.country
     reference_detail_data.pincode = updateReferenceDetailDto.pincode
-    reference_detail_data.statusCode = statuscodes
-    reference_detail_data.statusName = statusNames
     reference_detail_data.referenceDetailModBy = updateReferenceDetailDto.referenceDetailModBy
     reference_detail_data.referenceDetailModOn = updateReferenceDetailDto.referenceDetailModOn
     let updated_reference_detail_data = await this.referenceDetailRepository.save(reference_detail_data);

@@ -28,106 +28,89 @@ export class ReferenceDetail {
     name:string
 
     @Column({
-        name:'relationship_with_applicant',
-        nullable:true
+        name:'relationship_with_applicant'
     })
     relationshipWithApplicant:string
 
     @Column({
-        name:'mobile_no',
-        nullable:true
+        name:'mobile_no'
     })
     mobileNo:string
 
     @Column({
-        name:'knowning_since',
-        nullable:true
+        name:'knowning_since'
     })
     knowningSince:string
 
     @Column({
-        name:'address_line1',
-        nullable:true
+        name:'address_line1'
     })
     addressLine1:string
 
     @Column({
-        name:'address_line2',
-        nullable:true
+        name:'address_line2'
     })
     addressLine2:string
 
     @Column({
-        name:'land_mark',
-        nullable:true
+        name:'land_mark'
     })
     landmark:string
 
     @Column({
-        name:'pin_code',
-        nullable:true
+        name:'pin_code'
     })
     pincode:String
 
     @Column({
-        name:'area',
-        nullable:true
+        name:'area'
     })
     area:string;
 
     @Column({
-        name:'post_office',
-        nullable:true
+        name:'post_office'
     })
     postOffice:string;
 
     @Column({
-        name:'city',
-        nullable:true
+        name:'city'
     })
     city:string
 
     @Column({
-        name:'district',
-        nullable:true
+        name:'district'
     })
     district:string
 
     @Column({
-        name:'state',
-        nullable:true
+        name:'state'
     })
     state:string;
 
     @Column({
-        name:'country',
-        nullable:true
+        name:'country'
     })
     country:string
 
     @Column({
-        name:'reference_details_entd_by',
-        nullable:true
+        name:'reference_details_entd_by'
     })
     referenceDetailEntdBy:string
 
     @Column({
         name:'reference_details_entd_on',
-        default:()=>'NOW()',
-        nullable:true
+        default:()=>'NOW'
     })
     referenceDetailEntdOn:string
 
     @Column({
-        name:'reference_details_mod_by',
-        nullable:true
+        name:'reference_details_mod_by'
     })
     referenceDetailModBy:string
 
     @Column({
         name:'reference_details_mod_on',
-        default:()=>'NOW()',
-        nullable:true
+        default:()=>'NOW'
     })
     referenceDetailModOn:string
 }

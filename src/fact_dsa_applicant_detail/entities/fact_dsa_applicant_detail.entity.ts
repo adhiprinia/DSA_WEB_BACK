@@ -1,111 +1,22 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({
-    name: 'fact_dsa_applicant_details'
+    name:'fact_dsa_applicant_details'
 })
 export class FactDsaApplicantDetail {
     @PrimaryGeneratedColumn({
-        name: 'dsa_applicant_id'
+        name:'dsa_applicant_id'
     })
-    dsaApplicantId: string;
+    dsaApplicantId:string;
 
-    // @Column({
-    //     name:'master_Id',
-    //     nullable:true
-    // })
-    // masterId:string;
-    @Column({
-        name: 'applicant_id',
-        nullable: true
-    })
-    applicantId: string;
-
-    @Column({
-        name: 'salutation',
-        nullable: true
-    })
-    salutation: string;
-
-    @Column({
-        name: 'user_id',
-        nullable: true
-    })
-    userId: string
-
-    @Column({
-        name: 'full_name',
-        nullable: true
+     ///basic detail table
+     @Column({
+        name: 'full_name'
     })
     fullName: string;
 
     @Column({
-        name: 'fathers_name',
-        nullable: true
-    })
-    fathersName: string;
-
-    @Column({
-        name: 'mothers_name',
-        nullable: true
-    })
-    mothersName: string;
-
-    @Column({
-        name: 'date_of_birth',
-        nullable: true
-    })
-    dateOfBirth: Date;
-
-    @Column({
-        name: 'date_of_incorporation',
-        nullable: true
-    })
-    dateOfIncorporation: Date;
-
-    @Column({
-        name: 'gender',
-        nullable: true
-    })
-    gender: string;
-
-    @Column({
-        name: 'highest_qualification',
-        nullable: true
-    })
-    highestQualification: string;
-
-    @Column({
-        name: 'profession',
-        nullable: true
-    })
-    profession: string;
-
-    // @Column({
-    //     name:'pan_number'
-    // })
-    // panNumber:string;
-
-    // @Column({
-    //     name:'ckyc'
-    // })
-    // ckyc:string;
-
-    @Column({
-        name: 'aadhaar_card',
-        nullable: true
-    })
-    aadhaarCard: string;
-
-    // @Column({
-    //     name:'aadhaar_card_verify'
-    // })
-    // aadhaarCardVrify:string;
-
-
-
-    @Column({
-        name: 'mobile_number',
-        nullable: true
+        name: 'mobile_number'
     })
     mobileNumber: string;
 
@@ -116,201 +27,265 @@ export class FactDsaApplicantDetail {
 
     @Column({
         name: 'mobile_number_otp_verify',
-        // unique: true,
-        nullable: true
+        unique: true
     })
     mobileNumberOtpVerify: string;
 
     @Column({
         name: 'email_id',
-        // unique: true,
-        nullable: true
+        unique: true
     })
     emailId: string;
 
     @Column({
         name: 'email_id_otp',
-        // unique: true,
-        nullable: true
+        unique: true
     })
     emailIdOtp: string;
 
     @Column({
         name: 'email_id_otp_verify',
-        // unique: true,
-        nullable: true
+        unique: true
     })
     emailIdOtpVerify: string;
 
     @Column({
-        name: 'partner_type',
-        nullable: true
+        name: 'partner_type'
     })
     partnerType: string;
 
     @Column({
-        name: 'branch',
-        nullable: true
+        name: 'branch'
     })
     branch: string;
 
     @Column({
-        name: 'pin_code',
-        nullable: true
+        name: 'pin_code'
     })
     pincode: string;
 
     @Column({
-        name: 'constitution_type',
-        nullable: true
+        name: 'constitution_type'
     })
     constitutionType: string;
 
-    @Column({
-        name: 'authorise_abhlfl',
-        nullable: true
-    })
-    authoriseABHFL: string;
+    ///kyc details
 
     @Column({
-        name: 'cibil_score',
-        nullable: true
+        name: 'pan_number'
     })
-    cibilScore: string;
+    panCard: string;
 
     @Column({
-        name: 'cibil_requested_date_and_time',
-        nullable: true
+        name: 'aadhaar_card'
     })
-    cibilDateAndTime: string;
-
+    aadhaarCard: string;
+    
     @Column({
-        name:'pan_number'
-    })
-    panCard:string;
-
-    @Column({
-        name: 'ckyc_number',
-        nullable: true
+        name: 'ckyc_number'
     })
     ckycNumber: string;
 
+    
+        // @Column({
+        //     name:'ckyc'
+        // })
+        // ckyc:string;
     // @Column({
-    //     name:'aadhaar_card_verify'
+    //     name:'pan_number'
+    // })
+    // panNumber:string;
+
+    
+    // @Column({
+    //     name:'aadhaar_verify'
     // })
     // aadhaarVerify:string;
 
+    
+    // @Column({
+    //     name:'aadhaar_card_verify'
+    // })
+    // aadhaarCardVrify:string;
+
     @Column({
-        name: 'gst_applicable',
-        nullable: true
+        name: 'gst_applicable'
     })
     gstApplicable: string;
 
     @Column({
-        name: 'gst_number_verify',
-        nullable: true
+        name: 'gst_number_verify'
     })
     gstNumberVerify: string;
 
     @Column({
-        name: 'trin_applicable',
-        nullable: true
+        name: 'trin_applicable'
     })
     trinApplicable: string;
 
     @Column({
-        name: 'trin_number_verify',
-        nullable: true
+        name: 'trin_number_verify'
     })
     trinNumberVerify: string;
 
     @Column({
-        name: 'msme_applicable',
-        nullable: true
+        name: 'msme_applicable'
     })
     msmeApplicable: string;
 
     @Column({
-        name: 'msme_number_verify',
-        nullable: true
+        name: 'msme_number_verify'
     })
     msmeNumberVerify: string;
 
     @Column({
-        name: 'legal_dispute',
-        nullable: true
+        name: 'legal_dispute'
     })
     legalDispute: string
 
     @Column({
-        name:'applicant_photo'
+        name: 'applicant_photo'
     })
-    applicantPhoto:string
+    applicantPhoto: string
+
+   ///personal details
 
     @Column({
-        name:'code'
+        name: 'salutation'
     })
-    code:string;
+    salutation: string;
 
     @Column({
-        name:'status_code'
+        name: 'fathers_name'
     })
-    statusCode:string;
+    fathersName: string;
 
     @Column({
-        name:'status_name'
+        name: 'mothers_name'
     })
-    statusName:string;
+    mothersName: string;
 
     @Column({
-        name:'button_tittle'
+        name: 'date_of_birth'
     })
-    buttonTittle:string
+    dateOfBirth: Date;
 
     @Column({
-        name:'ui_component'
+        name: 'date_of_incorporation'
     })
-    uiComponent:string
+    dateOfIncorporation: Date;
 
     @Column({
-        name:'ui_level'
+        name: 'gender'
     })
-    uiLevel:string
+    gender: string;
 
     @Column({
-        name:"status"
+        name: 'highest_qualification'
     })
-    status:string;
+    highestQualification: string;
 
     @Column({
-        name:'stage'
+        name: 'profession'
     })
-    stage:string
+    profession: string;
 
     @Column({
-        name:'apllicant_details_entd_by'
+        name: 'authorise_abhlfl'
+    })
+    authoriseABHFL: string;
+
+
+
+    @Column({
+        name: 'cibil_score'
+    })
+    cibilScore: string;
+
+    @Column({
+        name: 'cibil_requested_date_and_time'
+    })
+    cibilDateAndTime: string;
+
+
+
+    @Column({
+        name: 'code'
+    })
+    code: string;
+    @Column({
+        name: 'status_code'
+    })
+    statusCode: string;
+
+    @Column({
+        name: 'status_name'
+    })
+    statusName: string;
+
+    @Column({
+        name: 'button_tittle'
+    })
+    buttonTittle: string
+
+    @Column({
+        name: 'ui_component'
+    })
+    uiComponent: string
+
+    @Column({
+        name: 'ui_level'
+    })
+    uiLevel: string
+
+    @Column({
+        name: "status"
+    })
+    status: string;
+
+    @Column({
+        name: 'stage'
+    })
+    stage: string
+
+    @Column({
+        name: 'apllicant_details_entd_by'
     })
     factDsaApplicantDetailEntdBy: string;
 
     @Column({
         name: 'apllicant_details_entd_on',
-        default: () => 'NOW()',
-        nullable: true
+        default: () => 'NOW'
     })
     factDsaApplicantDetailEntdOn: Date;
 
     @Column({
-        name: 'apllicant_details_mod_by',
-        nullable: true
+        name: 'apllicant_details_mod_by'
     })
     factDsaApplicantDetailModBy: string;
 
     @Column({
         name: 'apllicant_details_mod_on',
-        default: () => 'NOW()',
-        nullable: true
+        default: () => 'NOW'
     })
     factDsaApplicantDetailModOn: Date;
+
+    @Column({
+        name:'applicant_id'
+    })
+    applicantId:string;
+
+
+    @Column({
+        name:'user_id'
+    })
+    userId:string
+    
+    @Column({
+        name:'isactive',
+        default:()=>true
+    })
+    factDsaApplicantDetailisActive:boolean;
 
 
 

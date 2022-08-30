@@ -2,18 +2,20 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
 import { AddressDetail } from 'src/address_detail/entities/address_detail.entity';
+import { ApplicationStatus } from 'src/application_status/entities/application_status.entity';
 import { BankDetail } from 'src/bank_detail/entities/bank_detail.entity';
 import { CONFIG } from 'src/config/config';
 import { ApiResponse, ApiResponseStatus } from 'src/config/response';
 import { DocumentUpload } from 'src/document_upload/entities/document_upload.entity';
 import { baseUrl } from 'src/localUrl/Url';
+import { ProgressBar } from 'src/progress_bar/entities/progress_bar.entity';
+import { ReferenceDetail } from 'src/reference_detail/entities/reference_detail.entity';
 import { ResourceInfo } from 'src/resource_info/entities/resource_info.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { CreateFactDsaApplicantDetailDto } from './dto/create-fact_dsa_applicant_detail.dto';
 import { CreatePhoneOtpDto, CreateOtpVerifyDto, CreateGmailOtpDto, ForgotPasswordVerifyDto, CreateGmailotpVerifyDto, CreateAadhaarXmlDto, CreateAadhaarOtpDto, CreatePancardDto } from './dto/otp_send_verify_dtp';
 import { UpdateFactDsaApplicantDetailDto } from './dto/update-fact_dsa_applicant_detail.dto';
 import { FactDsaApplicantDetail } from './entities/fact_dsa_applicant_detail.entity';
-import { ReferenceDetail } from 'src/reference_detail/entities/reference_detail.entity';
 
 @Injectable()
 export class FactDsaApplicantDetailService {
@@ -22,11 +24,12 @@ export class FactDsaApplicantDetailService {
     @InjectRepository(BankDetail) private bankDetailRepository: Repository<BankDetail>,
     @InjectRepository(ReferenceDetail) private referenceDetailRepository: Repository<ReferenceDetail>,
     @InjectRepository(DocumentUpload) private documentUploadRepository: Repository<DocumentUpload>,
-    @InjectRepository(ResourceInfo) private resourceInfoRepository: Repository<ResourceInfo>
-  ) { }
+    @InjectRepository(ResourceInfo) private resourceInfoRepository: Repository<ResourceInfo>,
+    @InjectRepository(ApplicationStatus) private applicationStatusRepository: Repository<ApplicationStatus>  ) { }
 
   async create(createFactDsaApplicantDetailDto: CreateFactDsaApplicantDetailDto): Promise<ApiResponse<FactDsaApplicantDetail>> {
     let fact_dsa_applicant_detail = new FactDsaApplicantDetail()
+    let countval=await this.factDsaApplicantDetailRepository.count;
     fact_dsa_applicant_detail.fullName = createFactDsaApplicantDetailDto.fullName,
       fact_dsa_applicant_detail.userId = createFactDsaApplicantDetailDto.userId
     fact_dsa_applicant_detail.mobileNumber = createFactDsaApplicantDetailDto.mobileNumber,
@@ -44,12 +47,11 @@ export class FactDsaApplicantDetailService {
 
     for (let i = 1; i < 4; i++) {
       let address_detail = new AddressDetail()
-      address_detail.dsaApplicantId = saved_fact_dsa_applicant_detail.dsaApplicantId
+      address_detail.dsaApplicantId = fact_dsa_applicant_detail.dsaApplicantId
       address_detail.addressType = i.toString()
       let saved_address_detail = await this.addressDetailRepository.save(address_detail)
     }
-
-    // bank detail 
+    ///bank detail 
     let bank_detail = new BankDetail()
     bank_detail.dsaApplicantId = fact_dsa_applicant_detail.dsaApplicantId
     let saved_bank_detail = await this.bankDetailRepository.save(bank_detail)
@@ -64,10 +66,11 @@ export class FactDsaApplicantDetailService {
     document_upload.dsaApplicantId = fact_dsa_applicant_detail.dsaApplicantId
     let saved_document_upload = await this.documentUploadRepository.save(document_upload)
 
-    ///resource_info
-    // let resource_info = new ResourceInfo()
-    // resource_info.dsaApplicantId = fact_dsa_applicant_detail.dsaApplicantId
-    // let saved_resource_info = await this.resourceInfoRepository.save(resource_info)
+
+    //application status
+    let application_status = new ApplicationStatus();
+    application_status.dsaApplicantId = fact_dsa_applicant_detail.dsaApplicantId;
+    let saved_progress_bar = await this.applicationStatusRepository.save(application_status);
 
     let response: ApiResponse<FactDsaApplicantDetail> = {
       status: ApiResponseStatus.SUCCESS,
@@ -79,58 +82,14 @@ export class FactDsaApplicantDetailService {
   }
 
   async update(updateFactDsaApplicantDetailDto: UpdateFactDsaApplicantDetailDto) {
-    console.log(updateFactDsaApplicantDetailDto.dsaApplicantId,"aaa");
-    let myParam = updateFactDsaApplicantDetailDto.code
-    let codes = ""
-    let statuscodes = "";
-    let statusNames = "";
-    let buttonTittle = "";
-    let uiComponent = "";
-    let uiLevels = "";
-    let status = "";
-    let stage = ""
-    switch (myParam) {
-      case null:
-        statuscodes = 'basicdetailcompleted'
-        statusNames = 'basicdetailcompleted'
-        buttonTittle = ""
-        uiComponent = ""
-        uiLevels = "10"
-        status = "200"
-        stage = ""
-        codes = "1"
-        break;
-      case "1":
-        statuscodes = 'kycdetailcompleted'
-        statusNames = 'kycdetailcompleted'
-        buttonTittle = ""
-        uiComponent = ""
-        uiLevels = "25"
-        status = "201"
-        stage = ""
-        codes = "2"
-        break;
-      case "2":
-        statuscodes = 'personaldetailcompleted'
-        statusNames = 'personaldetailcompleted'
-        buttonTittle = ""
-        uiComponent = ""
-        uiLevels = "40"
-        status = "201"
-        stage = ""
-        break;
-
-      default:
-        statuscodes = "basicdetailpending"
-        break;
-    }
     let fact_dsa_applicant_detail = await this.factDsaApplicantDetailRepository
       .createQueryBuilder()
       .update(FactDsaApplicantDetail)
       .where({ dsaApplicantId: updateFactDsaApplicantDetailDto.dsaApplicantId })
       .set(
         {
-          // aliasId: updateFactDsaApplicantDetailDto.aliasId,
+
+          ///basic detail
           fullName: updateFactDsaApplicantDetailDto.fullName,
           mobileNumberOtpVerify: updateFactDsaApplicantDetailDto.mobileNumberOtpVerify,
           emailId: updateFactDsaApplicantDetailDto.emailId,
@@ -140,27 +99,10 @@ export class FactDsaApplicantDetailService {
           branch: updateFactDsaApplicantDetailDto.branch,
           pincode: updateFactDsaApplicantDetailDto.pincode,
           constitutionType: updateFactDsaApplicantDetailDto.constitutionType,
-          statusCode: statuscodes,
-          statusName: statusNames,
-          code: codes,
-          uiLevel: uiLevels,
-          status: status,
           applicantId: updateFactDsaApplicantDetailDto.applicantId,
-          salutation: updateFactDsaApplicantDetailDto.salutation,
-          fathersName: updateFactDsaApplicantDetailDto.fathersName,
-          mothersName: updateFactDsaApplicantDetailDto.mothersName,
-          dateOfBirth: updateFactDsaApplicantDetailDto.dateOfBirth,
-          dateOfIncorporation: updateFactDsaApplicantDetailDto.dateOfIncorporation,
-          gender: updateFactDsaApplicantDetailDto.gender,
-          highestQualification: updateFactDsaApplicantDetailDto.highestQualification,
-          profession: updateFactDsaApplicantDetailDto.profession,
-          aadhaarCard: updateFactDsaApplicantDetailDto.aadhaarCard,
-          // mobileNumber: updateFactDsaApplicantDetailDto.mobileNumber,
-          // mobileNumberOtp:updateFactDsaApplicantDetailDto.mobileNumberOtp,
-          authoriseABHFL: updateFactDsaApplicantDetailDto.authoriseABHFL,
-          cibilScore: updateFactDsaApplicantDetailDto.cibilScore,
-          cibilDateAndTime: updateFactDsaApplicantDetailDto.cibilDateAndTime,
+          ///lyc details update
           panCard: updateFactDsaApplicantDetailDto.panCard,
+          aadhaarCard: updateFactDsaApplicantDetailDto.aadhaarCard,
           ckycNumber: updateFactDsaApplicantDetailDto.ckycNumber,
           gstApplicable: updateFactDsaApplicantDetailDto.gstApplicable,
           gstNumberVerify: updateFactDsaApplicantDetailDto.gstNumberVerify,
@@ -170,18 +112,33 @@ export class FactDsaApplicantDetailService {
           msmeNumberVerify: updateFactDsaApplicantDetailDto.msmeNumberVerify,
           legalDispute: updateFactDsaApplicantDetailDto.legalDispute,
           applicantPhoto: updateFactDsaApplicantDetailDto.applicantPhoto,
+          ///personal detail updaye
+          salutation: updateFactDsaApplicantDetailDto.salutation,
+          fathersName: updateFactDsaApplicantDetailDto.fathersName,
+          mothersName: updateFactDsaApplicantDetailDto.mothersName,
+          dateOfBirth: updateFactDsaApplicantDetailDto.dateOfBirth,
+          gender: updateFactDsaApplicantDetailDto.gender,
+          highestQualification: updateFactDsaApplicantDetailDto.highestQualification,
+          profession: updateFactDsaApplicantDetailDto.profession,
+          dateOfIncorporation: updateFactDsaApplicantDetailDto.dateOfIncorporation,
+          // mobileNumber: updateFactDsaApplicantDetailDto.mobileNumber,
+          // mobileNumberOtp:updateFactDsaApplicantDetailDto.mobileNumberOtp,
+          authoriseABHFL: updateFactDsaApplicantDetailDto.authoriseABHFL,
+          cibilScore: updateFactDsaApplicantDetailDto.cibilScore,
+          cibilDateAndTime: updateFactDsaApplicantDetailDto.cibilDateAndTime,
 
         }
       )
       .execute();
-    console.log(fact_dsa_applicant_detail, "dsa")
-    let response = {
-      status: ApiResponseStatus.SUCCESS,
-      data: fact_dsa_applicant_detail
-    };
-    console.log(fact_dsa_applicant_detail);
-    console.log("dsaApplicantId", updateFactDsaApplicantDetailDto.dsaApplicantId)
-    return response;
+      if (fact_dsa_applicant_detail.affected === 0) {
+        return new HttpException('zero row affected', 404)
+      } else {
+        let response = {
+          status: ApiResponseStatus.SUCCESS,
+          data: fact_dsa_applicant_detail
+        };
+        return response;
+      }
   }
 
   async findAll(): Promise<ApiResponse<FactDsaApplicantDetail[]>> {
@@ -251,7 +208,7 @@ export class FactDsaApplicantDetailService {
   }
 
   async login(mobileNumber: string) {
-    let fact_dsa_applicant_detail = await this.factDsaApplicantDetailRepository.findOne({ where: { mobileNumber: mobileNumber } })
+    let fact_dsa_applicant_detail = await this.factDsaApplicantDetailRepository.findOne({ where: { mobileNumber: mobileNumber,factDsaApplicantDetailisActive:true} })
     let response: ApiResponse<FactDsaApplicantDetail>;
     if (fact_dsa_applicant_detail) {
       response = {

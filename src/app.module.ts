@@ -15,6 +15,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { ProgressBarModule } from './progress_bar/progress_bar.module';
 import { DirectorDetailModule } from './director_detail/director_detail.module';
+import { ApplicationStatus } from './application_status/entities/application_status.entity';
 
 @Module({
   imports: [
@@ -34,7 +35,9 @@ import { DirectorDetailModule } from './director_detail/director_detail.module';
       // password: 'password',
       // password: 'i0rt@35',
       schema: 'dsa',
-      entities: ["dist/**/*.entity{.ts,.js}"],
+      entities: [
+        "dist/**/*.entity{.ts,.js}"
+      ],
       // entityPrefix: 'dsa_',
       synchronize: false,
       logging: false
@@ -48,6 +51,7 @@ import { DirectorDetailModule } from './director_detail/director_detail.module';
     ApplicationStatusModule,
     ResourceInfoModule,
     EzfloIntegrateModule,
+    ApplicationStatus,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'client'),
 }),

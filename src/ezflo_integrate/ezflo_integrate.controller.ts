@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { EzfloIntegrateService } from './ezflo_integrate.service';
 import { CreateEzfloIntegrateDto, EzfloQueryStatus } from './dto/create-ezflo_integrate.dto';
 import { UpdateEzfloIntegrateDto } from './dto/update-ezflo_integrate.dto';
+import { DashBoardDto } from './dto/DashBoard.dto';
 
 @Controller('ezflo_integrate')
 export class EzfloIntegrateController {
@@ -26,4 +27,11 @@ export class EzfloIntegrateController {
   ezfloSubmitQueryStatus(@Body()ezfloQueryStatus:EzfloQueryStatus) {
     return this.ezfloIntegrateService.ezfloSubmitQueryStatus(ezfloQueryStatus);
   }
+
+  /// below methods are speacial methods whiich modifies the ezflo responses
+  @Get('dashboard')
+  dashBoard(@Body() dashBoardDto : DashBoardDto){
+    return this.ezfloIntegrateService.getDashboard(dashBoardDto);
+  }
 }
+

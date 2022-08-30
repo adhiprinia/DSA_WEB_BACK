@@ -1,7 +1,15 @@
 export class CreateProgressBarDto {
-    dsaApplicantId:string;
-    progressBarCount:string;
-    mobileNumber:string;
+    buttonTittle:string;
+    uiLevel:string;
+    uiComponent:string;
+    currentCode:string;
+    nextCode:string;
+    currentStage:string;
+    nextStage:string;
+    previousStage:string;
+    statusCode:string;
+    statusName:string;
     progressBarEntdOn:Date;
     progressBarEntdBy:string;
+
 }

@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({
     name:'dsa_progress_bar'
@@ -10,19 +10,55 @@ export class ProgressBar {
     progressBarId:string;
 
     @Column({
-        name:'dsa_applicant_id'
+        name:"button_tittle"
     })
-    dsaApplicantId:string;
+    buttonTittle:string;
 
     @Column({
-        name:'progress_bar_count'
+        name:'ui_level'
     })
-    progressBarCount:string;
+    uiLevel:string
 
     @Column({
-        name:'mobile_number'
+        name:'ui_component'
     })
-    mobileNumber:string;
+    uiComponent:string
+
+    @Column({
+        name:'current_code'
+    })
+    currentCode:string
+
+    @Column({
+        name:'next_code'
+    })
+    nextCode:string
+
+    @Column({
+        name:'current_stage'
+    })
+    currentStage:string
+
+    @Column({
+        name:'next_stage'
+    })
+    nextStage:string
+
+    @Column({
+        name:'previous_stage'
+    })
+    previousStage:string
+
+    @Column({
+        name:'status_code'
+    })
+    statusCode:string
+
+    @Column({
+        name:'status_name'
+    })
+    statusName:string
+
 
     @Column({
         name:'progress_bar_entd_on'

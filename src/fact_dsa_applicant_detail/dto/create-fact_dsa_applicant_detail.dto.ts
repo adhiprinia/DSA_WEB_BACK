@@ -1,3 +1,5 @@
+import { ApiProperty } from "@nestjs/swagger";
+
 export class CreateFactDsaApplicantDetailDto {
     masterId:string;
     ///
@@ -10,46 +12,84 @@ export class CreateFactDsaApplicantDetailDto {
     statusCode:string;
     statusName:string;
     ///
-    applicantId:string;
-    salutation:string;
+
+
+
+    @ApiProperty()
     fullName:string;
-    userId:string;
-    fathersName:string;
-    mothersName:string;
-    dsaApplicantId:string;
-    dateOfBirth:Date;
-    dateOfIncorporation:string;
-    gender:string;
-    highestQualification:string;
-    profession:string;
-    panNumber:string;
-    ckyc:string;
-    aadhaarCard:string;
-    firstName:string;
+    @ApiProperty()
     mobileNumber:string;
     mobileNumberOtp:string;
     mobileNumberOtpVerify:string;
+    @ApiProperty()
     emailId:string;
     emailIdOtp:string;
     emailIdOtpVerify:string;
+    @ApiProperty()
     partnerType:string;
+    @ApiProperty()
     branch:string;
+    @ApiProperty()
     pincode:string;
+    @ApiProperty()
     constitutionType:string;
+    @ApiProperty()
+    applicantId:string;
+    @ApiProperty()
+    userId:string;
+    @ApiProperty()
+    dsaApplicantId:string;
+        
+    
+    ///kyc details
+    @ApiProperty()
+    panNumber:string;
+    @ApiProperty()
+    ckyc:string;
+    @ApiProperty()
+    aadhaarCard:string;
+    @ApiProperty()
+    gstApplicable:string;
+    @ApiProperty()
+    gstNumberVerify:string;
+    @ApiProperty()
+    trinApplicable:string
+    @ApiProperty()
+    trinNumberVerify:string;
+    @ApiProperty()
+    msmeApplicable:string;
+    @ApiProperty()
+    msmeNumberVerify:string;
+    @ApiProperty()
+    legalDispute:string;
+    @ApiProperty()
+    applicantPhoto:string;
+
+    ///personal details
+    firstName:string;
+    @ApiProperty()
+    salutation:string;
+    @ApiProperty()
+    fathersName:string;
+    @ApiProperty()
+    mothersName:string;
+    @ApiProperty()
+    dateOfBirth:Date;
+    @ApiProperty()
+    gender:string;
+    @ApiProperty()
+    highestQualification:string;
+    @ApiProperty()
+    profession:string;
+    @ApiProperty()
+    dateOfIncorporation:Date;
     authoriseABHFL:string;
+    
     cibilScore:string;
     cibilDateAndTime:string;
     ckycNumber:string;
     aadhaarVerify:string;
     panCard:string;
-    gstApplicable:string;
-    gstNumberVerify:string;
-    trinApplicable:string
-    trinNumberVerify:string;
-    msmeApplicable:string;
-    msmeNumberVerify:string;
-    legalDispute:string;
-    applicantPhoto:string;
     factDsaApplicantDetailEntdBy:string;
     factDsaApplicantDetailEntdOn:Date;
 }
