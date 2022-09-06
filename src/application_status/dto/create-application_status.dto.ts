@@ -9,6 +9,7 @@ export class CreateApplicationStatusDto {
     previousStage:string;
     statusCode:string;
     statusName:string;
+    code:string
     applicantionDetailEntdBy:string;
     applicantionDetailEntdOn:Date;
 

@@ -19,7 +19,7 @@ export class DirectorDetailController {
   }
 
   @Post('findOne')
-  findOne(@Body('id') id: string) {
+  findOne(@Body('dsaApplicantId') id: string) {
     return this.directorDetailService.findOne(id);
   }
 

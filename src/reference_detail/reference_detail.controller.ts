@@ -24,7 +24,7 @@ export class ReferenceDetailController {
 
 
   @Post('findOne')
-  findOne(@Body() id: string):Promise<ApiResponse<ReferenceDetail>> {
+  findOne(@Body('dsaApplicantId') id: string):Promise<ApiResponse<ReferenceDetail>> {
     return this.referenceDetailService.findOne(id);
   }
 

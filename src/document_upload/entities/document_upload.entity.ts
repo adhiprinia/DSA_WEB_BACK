@@ -1,9 +1,9 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity({name:'dsa_upload_document'})
+@Entity({name:'dsa_upload_document_list'})
 export class DocumentUpload {
     @PrimaryGeneratedColumn('uuid',{
-        name:'upload_document_id'
+        name:'dsa_upload_document_list_id'
     })
     documentUploadId:string;
 
@@ -14,106 +14,64 @@ export class DocumentUpload {
     dsaApplicantId:string
 
     @Column({
-        name:'pan_of_authorised_signatory'
+        name:'document_type'
     })
-    panOfAuthorisedSignatory:string;
+    documentType:string
 
     @Column({
-        name:'address_proof_of_authorised_signatory'
+        name:'document_group'
     })
-    addressProofOfAuthorisedSignatory:string;
+    documentGroup:string;
+    
+    @Column({
+        name:'document_name'
+    })
+    documentName:string
 
     @Column({
-        name:'list_of_directors'
+        name:'constitution_type'
     })
-    listOfDirectors:string;
+    constitutionType:string
 
     @Column({
-        name:'address_proof'
+        name:'is_latest'
     })
-    addressProof:string;
+    isLatest:string;
 
     @Column({
-        name:'passport_size_photo'
+        name:'api_responce'
     })
-    passportSizePhoto:string;
+    apiResponse:string;
 
     @Column({
-        name:'latest_it_return'
+        name:'isactive'
     })
-    latestItReturn:string;
+    isactive:string
 
     @Column({
-        name:'bank_statement'
+        name:'file'
     })
-    bankStatement:string;
+    file:string
 
     @Column({
-        name:'enrolment_letter'
+        name:'upload_document_list_entd_by'
     })
-    enrolmentLetter:string;
+    uploadDocumentListEntdBy:string;
 
     @Column({
-        name:'gst_certificate'
+        name:'upload_document_list_entd_on'
     })
-    gstCertificate:string;
+    uploadDocumentListEntdOn:Date;
 
     @Column({
-        name:'incorporation_documents'
+        name:'upload_document_list_mod_by'
     })
-    incorporationDocuments:string;
+    uploadDocumentListModBy:string;
 
     @Column({
-        name:'board_resolution'
+        name:'upload_document_list_mod_on'
     })
-    boardResolution:string;
-
-
-
-    @Column({
-        name:'rcu_report'
-    })
-    rcuReport:string;
-
-    @Column({
-        name:'dnd_certificate'
-    })
-    dndCertificate:string;
-
-    @Column({
-        name:'msme_registration'
-    })
-    msmeRegistration:string;
-
-    @Column({
-        name:'attendance_sheet'
-    })
-    attendanceSheet:string;
-
-    @Column({
-        name:'relation_party_checks'
-    })
-    relatedPartyChecks:string;
-
-    @Column({
-        name:'document_upload_entd_by'
-    })
-    documentUploadEntdBy:string;
-
-    @Column({
-        name:'document_upload_entd_on'
-    })
-    documentUploadEntdOn:Date;
-
-    @Column({
-        name:'document_upload_mod_by'
-    })
-    documentUploadModBy:string;
-
-    @Column({
-        name:'document_upload_mod_on'
-    })
-    documentUploadModOn:Date;
+    uploadDocumentListModOn:Date;
     
     
 }

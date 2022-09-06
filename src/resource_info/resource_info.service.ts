@@ -66,7 +66,7 @@ export class ResourceInfoService {
   }
 
   async findAllDashBoard(id:string):Promise<ApiResponse<ResourceInfo[]>> {
-    let resource_info_result = await this.resourceInfoRepository.find({where:{complete:"false"}})
+    let resource_info_result = await this.resourceInfoRepository.find({where:{complete:"FALSE"}})
     console.log(resource_info_result)
     let responsData = [];
     responsData.push({

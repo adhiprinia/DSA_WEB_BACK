@@ -52,7 +52,7 @@ export class AddressDetailService {
    
     let address_detail_result = await this.addressDetailRepository.find({ where: { dsaApplicantId:id} });
     let response: ApiResponse<AddressDetail>;
-    console.log(address_detail_result,"AAAAAAAAAA")
+    // console.log(address_detail_result,"AAAAAAAAAA")
     if (address_detail_result) {
       response = {
         status: ApiResponseStatus.SUCCESS,

@@ -29,6 +29,7 @@ export class ReferenceDetailService {
     reference_detail.referenceDetailEntdBy = createReferenceDetailDto.referenceDetailEntdBy
     reference_detail.referenceDetailEntdOn = createReferenceDetailDto.referenceDetailEntdOn
     let saved_reference_detail = await this.referenceDetailRepository.save(reference_detail)
+    console.log(saved_reference_detail,"vvvvvvvvvvv")
     let response: ApiResponse<ReferenceDetail> = {
       status: ApiResponseStatus.SUCCESS,
       data: saved_reference_detail
@@ -50,7 +51,8 @@ export class ReferenceDetailService {
     return response;
   }
   async findOne(id: string): Promise<ApiResponse<ReferenceDetail>> {
-    let reference_detail_result = await this.referenceDetailRepository.findOne({ where: { dsaApplicantId: id } });
+    let reference_detail_result = await this.referenceDetailRepository.find({ where: { dsaApplicantId: id } });
+    console.log(reference_detail_result);
     let response: ApiResponse<ReferenceDetail>;
     if (reference_detail_result) {
       response = {

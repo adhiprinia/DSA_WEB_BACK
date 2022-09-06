@@ -58,25 +58,79 @@ export class ApplicationStatusService {
     }
     return response;
   }
+  async findOpportunities(): Promise<ApiResponse<ApplicationStatus[]>> {
+    let application_status_result = await this.applicationStatusRepository.find({ where: { currentCode : '0' } })
+    let responsData = [];
+    responsData.push({
+      // "application_status_result": application_status_result,
+      "totalCount": application_status_result.length,
+    });
+    let response: ApiResponse<ApplicationStatus[]> = {
+      status: ApiResponseStatus.SUCCESS,
+      data: responsData
+    }
+    return response;
+  }
+  async findLead(): Promise<ApiResponse<ApplicationStatus[]>> {
+    // let count = ["1","2","3","4","5","6","7","8"]
+    let application_status_results = await this.applicationStatusRepository
+    .createQueryBuilder()
+    .where('current_code =:currentCode',{currentCode:"9"})
+    .getCount()   
+     
+    let application_status_result = await this.applicationStatusRepository
+    .createQueryBuilder()
+    .where('current_code !=:currentCode',{currentCode:"0"})
+    .getCount()
+    let count = application_status_result - application_status_results
+    let countToString = count.toString()
+    let responsData = [];
+    responsData.push({
+      "application_status_results": countToString,
+      // "application_status_result":application_status_result
+   });
+    let response: ApiResponse<ApplicationStatus[]> = {
+      status: ApiResponseStatus.SUCCESS,
+      data: responsData
+    }
+    return response;
+  }
 
 
 
-  async progressBar(id: string): Promise<ApiResponse<ApplicationStatus>> {
+  async progressBar(createApplicationStatusDto: CreateApplicationStatusDto): Promise<ApiResponse<ApplicationStatus>> {
     try {
-      let application_status_result = await this.applicationStatusRepository.findOne({ where: { dsaApplicantId: id } });
+      let page_code = createApplicationStatusDto.code
+      // console.log("page_code",page_code)
+      // console.log("appli",createApplicationStatusDto.dsaApplicantId)
+      let application_status_result = await this.applicationStatusRepository.findOne({ where: { dsaApplicantId: createApplicationStatusDto.dsaApplicantId } });
+      console.log(application_status_result,">>>")
+      if(application_status_result === null){
+        let response: ApiResponse<ApplicationStatus>;
+        response = {
+          status: ApiResponseStatus.ERROR
+        }
+      }else if (application_status_result.currentCode === null){
+        let response: ApiResponse<ApplicationStatus>;
+        response = {
+          status: ApiResponseStatus.ERROR
+        }
+      }  
       let current_code = application_status_result.currentCode
       console.log("current_code", current_code)
+      // console.log("pagecode",createApplicationStatusDto.code)
       let progress_bar = await this.progressBarRepository.findOne({ where: { currentCode: current_code } })
-      console.log(progress_bar)
+      // console.log(progress_bar,"progress")
       if (progress_bar === null) {
         throw new HttpException("completed", 404)
       }
-      else if (current_code === progress_bar.currentCode) {
+      else if (current_code<=page_code) {
+        // console.log("calle")
         let application_status_results = await this.applicationStatusRepository
 
           .createQueryBuilder()
           .update(ApplicationStatus)
-          .where({ dsaApplicantId: id })
+          .where({ dsaApplicantId: createApplicationStatusDto.dsaApplicantId })
           .set(
             {
               buttonTittle: progress_bar.buttonTittle,
@@ -106,6 +160,7 @@ export class ApplicationStatusService {
         }
       }
       return response;
+    
     } catch (error) {
       throw error
     }
@@ -126,6 +181,4 @@ export class ApplicationStatusService {
     };
     return response;
   }
-
-
 }

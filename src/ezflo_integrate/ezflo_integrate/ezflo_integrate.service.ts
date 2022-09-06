@@ -57,7 +57,8 @@ export class EzfloIntegrateService {
       if(error){
         console.error(error);
         // throw new HttpException(JSON.stringify(error.response),404);
-        return error.response.data;
+        // return error.response.data;
+        return error?.response || error;
       }
       else throw new InternalServerErrorException(error.message);
     }
@@ -205,9 +206,9 @@ export class EzfloIntegrateService {
       /*
         neeed to check the below line if response changes
       */
-     console.log(ezflo_integrate_submit_query);
+    //  console.log(ezflo_integrate_submit_query);
       let applicant_id = ezflo_integrate_submit_query.data["Application_No"];
-      console.log(applicant_id);
+      // console.log(applicant_id);
 
       let fact_dsa_applicant_detail_save = await this.factDsaApplicantDetailRepository
       .createQueryBuilder()
@@ -228,7 +229,7 @@ export class EzfloIntegrateService {
       return response;
     } catch (error) {
       //// throwing error;
-      console.log(error);
+      console.log(error.message, "internl Error");
       // console.log(error.message);
       if(error){
         throw error;
@@ -264,22 +265,22 @@ async getAllQueries(getAllQueriesDto : GetAllQueriesDto) {
 
   /// request objects
   let openQueryReq = axios.post(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloPullOpenQueries`, 
-  {ApplicationID : getAllQueriesDto.ApplicationID, QueryStatus:"Open"},
-  { headers: { 
-    'Content-Type': 'application/json'
-  }});
+    {ApplicationID : getAllQueriesDto.ApplicationID, QueryType:"External" ,QueryStatus:"Open"},
+    { headers: { 
+      'Content-Type': 'application/json'
+    }});
 
-  let InReviewQueryReq = axios.post(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloPullOpenQueries`, 
-  {ApplicationID : getAllQueriesDto.ApplicationID, QueryStatus:"In Progress"},
-  { headers: { 
-    'Content-Type': 'application/json'
-  }});
+    let InReviewQueryReq = axios.post(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloPullOpenQueries`, 
+    {ApplicationID : getAllQueriesDto.ApplicationID, QueryType:"External" ,QueryStatus:"In Progress"},
+    { headers: { 
+      'Content-Type': 'application/json'
+    }});
 
-  let resolvedReq = axios.post(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloPullOpenQueries`, 
-  {ApplicationID: getAllQueriesDto.ApplicationID, QueryStatus:"Completed"},
-  { headers: { 
-    'Content-Type': 'application/json'
-  }});
+    let resolvedReq = axios.post(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloPullOpenQueries`, 
+    {ApplicationID: getAllQueriesDto.ApplicationID, QueryType:"External"  ,QueryStatus:"Completed"},
+    { headers: { 
+      'Content-Type': 'application/json'
+    }});
 
   try {
     //// awaiting for all requests(promise)
@@ -288,9 +289,9 @@ async getAllQueries(getAllQueriesDto : GetAllQueriesDto) {
     return {
       status : "Ok",
       data : {
-        Open : openRes.status === "fulfilled" ? openRes.value.data :"Error",
-        InReview :InReviewRes.status === "fulfilled" ? InReviewRes.value.data :"Error",
-        Resolved : ResolvedRes.status === "fulfilled" ? ResolvedRes.value.data :"Error",
+        Open : openRes.status === "fulfilled" ? openRes.value.data : openRes.reason,
+        InReview :InReviewRes.status === "fulfilled" ? InReviewRes.value.data : InReviewRes.reason,
+        Resolved : ResolvedRes.status === "fulfilled" ? ResolvedRes.value.data : ResolvedRes.reason,
       }
     }
   }

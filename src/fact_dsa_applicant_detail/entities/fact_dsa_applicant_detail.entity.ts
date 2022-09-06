@@ -1,13 +1,13 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({
-    name: 'fact_dsa_applicant_details'
+    name:'fact_dsa_applicant_details'
 })
 export class FactDsaApplicantDetail {
-    @PrimaryGeneratedColumn({
-        name: 'dsa_applicant_id'
+    @PrimaryGeneratedColumn('uuid',{
+        name:'dsa_applicant_id'
     })
-    dsaApplicantId: string;
+    dsaApplicantId:string;
 
      ///basic detail table
      @Column({
@@ -27,25 +27,21 @@ export class FactDsaApplicantDetail {
 
     @Column({
         name: 'mobile_number_otp_verify',
-        unique: true
     })
     mobileNumberOtpVerify: string;
 
     @Column({
         name: 'email_id',
-        unique: true
     })
     emailId: string;
 
     @Column({
         name: 'email_id_otp',
-        unique: true
     })
     emailIdOtp: string;
 
     @Column({
         name: 'email_id_otp_verify',
-        unique: true
     })
     emailIdOtpVerify: string;
 
@@ -103,10 +99,10 @@ export class FactDsaApplicantDetail {
     // aadhaarVerify:string;
 
     
-    // @Column({
-    //     name:'aadhaar_card_verify'
-    // })
-    // aadhaarCardVrify:string;
+    @Column({
+        name:'status_name'
+    })
+    ezflowStatus:string;
 
     @Column({
         name: 'gst_applicable'
@@ -245,7 +241,5 @@ export class FactDsaApplicantDetail {
         default:()=>true
     })
     factDsaApplicantDetailisActive:boolean;
-
-
 
 }

@@ -63,7 +63,7 @@ export class DirectorDetailService {
   }
 
   async findOne(id: string): Promise<ApiResponse<DirectorDetail>> {
-    let director_detail_result = await this.directorDetailRepository.findOne({ where: { dsaDirectorId: id } });
+    let director_detail_result = await this.directorDetailRepository.findOne({ where: { dsaApplicantId: id } });
     let response: ApiResponse<DirectorDetail>;
     if (director_detail_result) {
       response = {

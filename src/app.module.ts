@@ -16,6 +16,8 @@ import { join } from 'path';
 import { ProgressBarModule } from './progress_bar/progress_bar.module';
 import { DirectorDetailModule } from './director_detail/director_detail.module';
 import { ApplicationStatus } from './application_status/entities/application_status.entity';
+import { MulterModule } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 @Module({
   imports: [
@@ -27,15 +29,17 @@ import { ApplicationStatus } from './application_status/entities/application_sta
       port: 5432,
       database: 'abhl',
       // // username: 'postgres',
-      username: 'postgres_admin',
-      // password: 'password',
-      password: '6xvcFEf4lnOtfq',
+      username: 'los_web_user',
+      // password: 'password',   
+      password: 'i0rt@80',
       // username: 'postgres',
       // username: 'los_master_user',
       // password: 'password',
       // password: 'i0rt@35',
       schema: 'dsa',
-      entities: ["dist/**/*.entity{.ts,.js}"],
+      entities: [
+        "dist/**/*.entity{.ts,.js}"
+      ],
       // entityPrefix: 'dsa_',
       synchronize: false,
       logging: false
@@ -51,10 +55,11 @@ import { ApplicationStatus } from './application_status/entities/application_sta
     EzfloIntegrateModule,
     ApplicationStatus,
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'client'),
-}),
+      rootPath: join(__dirname,'..','client'),
+}), 
     ProgressBarModule,
     DirectorDetailModule],
+    
   controllers: [AppController],
   providers: [AppService],
   

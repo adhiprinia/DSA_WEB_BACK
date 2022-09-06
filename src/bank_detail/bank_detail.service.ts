@@ -62,10 +62,10 @@ export class BankDetailService {
     return response;
   }
   async uploadCancelledChegue(file,bankDetailId:string){
-    console.log("bankDetailId in service",bankDetailId)
-    console.log("file",file)
+    // console.log("bankDetailId in service",bankDetailId)
+    // console.log("file",file)
     let Url = `${baseUrl}${file[0].filename}`
-    console.log(Url)
+    // console.log(Url)
     
     await this.bankDetailRepository.createQueryBuilder()
     .createQueryBuilder()

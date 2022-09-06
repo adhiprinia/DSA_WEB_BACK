@@ -18,7 +18,10 @@ export class FactDsaApplicantDetailController {
   findAll() {
     return this.factDsaApplicantDetailService.findAll();
   }
-
+  @Post('findAllApplications')
+  findAllApplications() {
+    return this.factDsaApplicantDetailService.findAllApplications();
+  }
   @Post('findOne')
   findOne(@Body('dsaApplicantId') dsaApplicantId: string) {
     return this.factDsaApplicantDetailService.findOne(dsaApplicantId);

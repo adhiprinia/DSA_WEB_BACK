@@ -13,50 +13,42 @@ export class AddressDetail {
     dsaApplicantId:string
 
     @Column({
-        name:'address_line1',
-        nullable:true
+        name:'address_line1'
     })
     addressLine1:string;
 
     @Column({
-        name:'address_line2',
-        nullable:true
+        name:'address_line2'
     })
     addressLine2:string;
 
     @Column({
-        name:'pin_code',
-        nullable:true
+        name:'pin_code'
     })
     pinCode:string;
 
     @Column({
-        name:'area',
-        nullable:true
+        name:'area'
     })
     area:string;
 
     @Column({
-        name:'city',
-        nullable:true
+        name:'city'
     })
     city:string;
 
     @Column({
-        name:'district',
-        nullable:true
+        name:'district'
     })
     district:string;
 
     @Column({
-        name:'state',
-        nullable:true
+        name:'state'
     })
     state:string;
 
     @Column({
-        name:'country',
-        nullable:true
+        name:'country'
     })
     country:string;
 
@@ -67,40 +59,34 @@ export class AddressDetail {
     landMark:string;
 
     @Column({
-        name:'resident_type',
-        nullable:true
+        name:'resident_type'
     })
     residentType:string;
 
     @Column({
-        name:'address_type',
-        nullable:true
+        name:'address_type'
     })
     addressType:string;
 
     @Column({
-        name:'address_deatail_entd_by',
-        nullable:true
+        name:'address_deatail_entd_by'
     })
     addressDetailEntdBy:string;
    
     @Column({
         name:'address_detail_entd_on',
-        default:()=>'NOW()',
-        nullable:true
+        default:()=>'NOW'
     })
     addressDetailEntdOn:Date;
     
     @Column({
-        name:'address_detail_mod_by',
-        nullable:true
+        name:'address_detail_mod_by'
     })
     addressDetailModBy:string;
     
     @Column({
         name:'address_detail_mod_on',
-        default:()=>'NOW()',
-        nullable:true
+        default:()=>'NOW'
     })
     addressDetailModOn:Date;
 

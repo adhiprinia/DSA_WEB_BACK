@@ -20,6 +20,15 @@ export class ApplicationStatusController {
   findAll():Promise<ApiResponse<ApplicationStatus[]>> {
     return this.applicationStatusService.findAll();
   }
+  @Post('findLead')
+  findLead():Promise<ApiResponse<ApplicationStatus[]>> {
+    return this.applicationStatusService.findLead();
+  }
+
+  @Post('findOpportunities')
+  findOpportunities():Promise<ApiResponse<ApplicationStatus[]>> {
+    return this.applicationStatusService.findOpportunities();
+  }
   @Post('findProgressBar')
   findProgressBar(@Body('dsaApplicantId')id:string):Promise<ApiResponse<ApplicationStatus>> {
     return this.applicationStatusService.findProgressBar(id);
@@ -27,8 +36,8 @@ export class ApplicationStatusController {
 
 
   @Post('progressBar')
-  progressBar(@Body('dsaApplicantId') id: string):Promise<ApiResponse<ApplicationStatus>> {
-    return this.applicationStatusService.progressBar(id);
+  progressBar(@Body() createApplicationStatusDto: CreateApplicationStatusDto):Promise<ApiResponse<ApplicationStatus>> {
+    return this.applicationStatusService.progressBar(createApplicationStatusDto);
   }
 
   @Post('update')
