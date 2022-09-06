@@ -1,13 +1,13 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({
-    name:'fact_dsa_applicant_details'
+    name: 'fact_dsa_applicant_details'
 })
 export class FactDsaApplicantDetail {
     @PrimaryGeneratedColumn({
-        name:'dsa_applicant_id'
+        name: 'dsa_applicant_id'
     })
-    dsaApplicantId:string;
+    dsaApplicantId: string;
 
      ///basic detail table
      @Column({

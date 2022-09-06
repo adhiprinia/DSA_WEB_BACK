@@ -19,66 +19,78 @@ export class BankDetail {
     })
     cancelledCheque:string;
     @Column({
-        name:'ifsc_code'
+        name:'ifsc_code',
+        nullable:true
     })
     ifscCode:string;
 
     
     @Column({
-        name:'account_number'
+        name:'account_number',
+        nullable:true
     })
     accountNumber:string;
 
     @Column({
-        name:'bank_name'
+        name:'bank_name',
+        nullable:true
     })
     bankName:string;
 
     @Column({
-        name:'branch_name'
+        name:'branch_name',
+        nullable:true
     })
     branchName:string;
 
     @Column({
-        name:'micr_number'
+        name:'micr_number',
+        nullable:true
     })
     micrNumber:string;
 
     @Column({
-        name:'no_of_years_of_relationship_with_bank'
+        name:'no_of_years_of_relationship_with_bank',
+        nullable:true
     })
     noOfYearsOfRelationShipWithBank:string;
 
     
     @Column({
-        name:'account_type'
+        name:'account_type',
+        nullable:true
     })
     accountType:string;
     
     @Column({
-        name:'account_holder'
+        name:'account_holder',
+        nullable:true
     })
     accountHolder:string;
 
     @Column({
-        name:'bank_detail_entd_by'
+        name:'bank_detail_entd_by',
+        nullable:true
     })
     bankDetailEndtBy:string
   
     @Column({
         name:'bank_detail_entd_on',
-        default: () => 'NOW()'
+        default: () => 'NOW()',
+        nullable:true
     })
     bankDetailEndtOn:Date
 
     @Column({
-        name:'bank_detail_mod_by'
+        name:'bank_detail_mod_by',
+        nullable:true
     })
     bankDetailModBy:string
   
     @Column({
         name:'bank_detail_mod_on',
-        default: () => 'NOW()'
+        default: () => 'NOW()',
+        nullable:true
     })
     bankDetailModOn:Date;
 }

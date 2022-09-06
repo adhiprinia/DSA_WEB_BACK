@@ -35,9 +35,7 @@ import { ApplicationStatus } from './application_status/entities/application_sta
       // password: 'password',
       // password: 'i0rt@35',
       schema: 'dsa',
-      entities: [
-        "dist/**/*.entity{.ts,.js}"
-      ],
+      entities: ["dist/**/*.entity{.ts,.js}"],
       // entityPrefix: 'dsa_',
       synchronize: false,
       logging: false

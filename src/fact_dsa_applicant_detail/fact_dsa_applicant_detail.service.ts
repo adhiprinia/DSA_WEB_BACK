@@ -58,11 +58,12 @@ export class FactDsaApplicantDetailService {
 
     for (let i = 1; i < 4; i++) {
       let address_detail = new AddressDetail()
-      address_detail.dsaApplicantId = fact_dsa_applicant_detail.dsaApplicantId
+      address_detail.dsaApplicantId = saved_fact_dsa_applicant_detail.dsaApplicantId
       address_detail.addressType = i.toString()
       let saved_address_detail = await this.addressDetailRepository.save(address_detail)
     }
-    ///bank detail 
+
+    // bank detail 
     let bank_detail = new BankDetail()
     bank_detail.dsaApplicantId = fact_dsa_applicant_detail.dsaApplicantId
     let saved_bank_detail = await this.bankDetailRepository.save(bank_detail)
