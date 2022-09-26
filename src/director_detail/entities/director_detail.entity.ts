@@ -40,6 +40,12 @@ export class DirectorDetail {
     dateOfBirth:Date;
 
     @Column({
+        name:'date_of_incorporation'
+    })
+    dateOfIncorporation:Date;
+
+
+    @Column({
         name:'gender'
     })
     gender:string;
@@ -78,10 +84,29 @@ export class DirectorDetail {
         name:'status'
     })
     status:string
+    @Column({
+        name:'full_name'
+    })
+    fullName:string
 
     @BeforeInsert()
     beforeInsertActions() {
       this.status = "Active";
     }
+
+    @Column({
+        name:'isactive'
+    })
+    isActive:boolean
+    @BeforeInsert()
+    beforeInsertCurrentCode(){
+        this.isActive = true;
+    }    
+
+
+    @Column({
+        name:'director_type'
+    })
+    directorType:string
 
 }

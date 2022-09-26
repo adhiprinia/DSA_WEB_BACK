@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ApiResponse, ApiResponseStatus } from 'src/config/response';
 import { Repository, DeleteResult } from 'typeorm';
@@ -8,8 +8,8 @@ import { ReferenceDetail } from './entities/reference_detail.entity';
 
 @Injectable()
 export class ReferenceDetailService {
-  constructor(@InjectRepository(ReferenceDetail)private referenceDetailRepository:Repository<ReferenceDetail> ){}
-  async create(createReferenceDetailDto: CreateReferenceDetailDto):Promise<ApiResponse<ReferenceDetail>> {
+  constructor(@InjectRepository(ReferenceDetail) private referenceDetailRepository: Repository<ReferenceDetail>) { }
+  async create(createReferenceDetailDto: CreateReferenceDetailDto): Promise<ApiResponse<ReferenceDetail>> {
     let reference_detail = new ReferenceDetail()
     reference_detail.dsaApplicantId = createReferenceDetailDto.dsaApplicantId
     reference_detail.name = createReferenceDetailDto.name
@@ -29,7 +29,7 @@ export class ReferenceDetailService {
     reference_detail.referenceDetailEntdBy = createReferenceDetailDto.referenceDetailEntdBy
     reference_detail.referenceDetailEntdOn = createReferenceDetailDto.referenceDetailEntdOn
     let saved_reference_detail = await this.referenceDetailRepository.save(reference_detail)
-    console.log(saved_reference_detail,"vvvvvvvvvvv")
+    // console.log(saved_reference_detail,"vvvvvvvvvvv")
     let response: ApiResponse<ReferenceDetail> = {
       status: ApiResponseStatus.SUCCESS,
       data: saved_reference_detail
@@ -37,12 +37,12 @@ export class ReferenceDetailService {
     return response;
   }
 
-  async findAll():Promise<ApiResponse<ReferenceDetail[]>> {
+  async findAll(): Promise<ApiResponse<ReferenceDetail[]>> {
     let reference_detail_result = await this.referenceDetailRepository.find()
     let responsData = [];
     responsData.push({
-      "reference_detail_result":reference_detail_result,
-      "totalCount":reference_detail_result.length,
+      "reference_detail_result": reference_detail_result,
+      "totalCount": reference_detail_result.length,
     });
     let response: ApiResponse<ReferenceDetail[]> = {
       status: ApiResponseStatus.SUCCESS,
@@ -51,21 +51,33 @@ export class ReferenceDetailService {
     return response;
   }
   async findOne(id: string): Promise<ApiResponse<ReferenceDetail>> {
-    let reference_detail_result = await this.referenceDetailRepository.find({ where: { dsaApplicantId: id } });
-    console.log(reference_detail_result);
-    let response: ApiResponse<ReferenceDetail>;
-    if (reference_detail_result) {
-      response = {
-        status: ApiResponseStatus.SUCCESS,
-        data: reference_detail_result
+    try { 
+      if (id) {
+        let reference_detail_result = await this.referenceDetailRepository.find({ where: { dsaApplicantId: id } });
+        console.log(reference_detail_result);
+        if(reference_detail_result.length===0){
+          throw new HttpException("user not found",404)
+        }
+        let response: ApiResponse<ReferenceDetail>;
+        if (reference_detail_result) {
+          response = {
+            status: ApiResponseStatus.SUCCESS,
+            data: reference_detail_result
+          }
+        }
+        else {
+          response = {
+            status: ApiResponseStatus.ERROR
+          }
+        }
+        return response;
+      }else {
+        throw new HttpException("dsaApplicantId is not found in body",404)
       }
+    } catch (error) {
+      throw  error
     }
-    else {
-      response = {
-        status: ApiResponseStatus.ERROR
-      }
-    }
-    return response;
+
   }
 
   async update(updateReferenceDetailDto: UpdateReferenceDetailDto): Promise<ApiResponse<ReferenceDetail>> {
@@ -96,6 +108,6 @@ export class ReferenceDetailService {
     return response;
   }
 
-  
- 
+
+
 }

@@ -9,8 +9,8 @@ import { BankDetail } from './entities/bank_detail.entity';
 
 @Injectable()
 export class BankDetailService {
-  constructor(@InjectRepository(BankDetail)private bankDetailRepository:Repository<BankDetail>){}
-  async create(createBankDetailDto: CreateBankDetailDto):Promise<ApiResponse<BankDetail>> {
+  constructor(@InjectRepository(BankDetail) private bankDetailRepository: Repository<BankDetail>) { }
+  async create(createBankDetailDto: CreateBankDetailDto): Promise<ApiResponse<BankDetail>> {
     let bank_detail = new BankDetail()
     bank_detail.ifscCode = createBankDetailDto.ifscCode
     bank_detail.accountNumber = createBankDetailDto.accountNumber
@@ -30,12 +30,12 @@ export class BankDetailService {
     return response;
   }
 
-  async findAll():Promise<ApiResponse<BankDetail[]>> {
+  async findAll(): Promise<ApiResponse<BankDetail[]>> {
     let bank_detail_result = await this.bankDetailRepository.find()
     let responsData = [];
     responsData.push({
-      "bank_detail_result":bank_detail_result,
-      "totalCount":bank_detail_result.length,
+      "bank_detail_result": bank_detail_result,
+      "totalCount": bank_detail_result.length,
     });
     let response: ApiResponse<BankDetail[]> = {
       status: ApiResponseStatus.SUCCESS,
@@ -46,7 +46,7 @@ export class BankDetailService {
 
   async findOne(id: string): Promise<ApiResponse<BankDetail>> {
 
-    let bank_detail_result = await this.bankDetailRepository.findOne({ where: {dsaApplicantId: id } });
+    let bank_detail_result = await this.bankDetailRepository.findOne({ where: { dsaApplicantId: id } });
     let response: ApiResponse<BankDetail>;
     if (bank_detail_result) {
       response = {
@@ -61,20 +61,20 @@ export class BankDetailService {
     }
     return response;
   }
-  async uploadCancelledChegue(file,bankDetailId:string){
+  async uploadCancelledChegue(file, bankDetailId: string) {
     // console.log("bankDetailId in service",bankDetailId)
     // console.log("file",file)
     let Url = `${baseUrl}${file[0].filename}`
     // console.log(Url)
-    
-    await this.bankDetailRepository.createQueryBuilder()
-    .createQueryBuilder()
-    .update(BankDetail)
-    .where({ bankDetailId : bankDetailId})
-    .set({ cancelledCheque: Url})
-    .execute();
-    let response= {
-      status:201
+
+    await this.bankDetailRepository
+      .createQueryBuilder()
+      .update(BankDetail)
+      .where({ bankDetailId: bankDetailId })
+      .set({ cancelledCheque: Url })
+      .execute();
+    let response = {
+      status: 201
     };
     return response;
   }
@@ -99,4 +99,6 @@ export class BankDetailService {
     };
     return response;
   }
+
+
 }

@@ -29,7 +29,7 @@ export class ApplicationStatus {
     uiLevel:string
     @BeforeInsert()
     beforeInsertUiLevel(){
-        this.uiLevel = "0";
+        this.uiLevel = "5";
     }
 
     @Column({

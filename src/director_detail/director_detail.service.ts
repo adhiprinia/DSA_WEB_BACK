@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ApiResponse, ApiResponseStatus } from 'src/config/response';
 import { Repository, UpdateResult } from 'typeorm';
 import { CreateDirectorDetailDto } from './dto/create-director_detail.dto';
+import { FindDirectorDto } from './dto/find-director.dto';
 import { UpdateDirectorDetailDto } from './dto/update-director_detail.dto';
 import { DirectorDetail } from './entities/director_detail.entity';
 
@@ -20,9 +21,14 @@ export class DirectorDetailService {
     director_detail.gender = createDirectorDetailDto.gender
     director_detail.ckycNumber = createDirectorDetailDto.ckycNumber
     director_detail.fathersName = createDirectorDetailDto.fathersName
+    director_detail.fullName = createDirectorDetailDto.fullName
+    director_detail.mothersName = createDirectorDetailDto.mothersName
+    director_detail.directorType = createDirectorDetailDto.directorType
     director_detail.highestQualification = createDirectorDetailDto.highestQualification
     director_detail.profession = createDirectorDetailDto.profession
     director_detail.salutation = createDirectorDetailDto.salutation
+    director_detail.dateOfIncorporation = createDirectorDetailDto.dateOfIncorporation
+    director_detail.isActive = createDirectorDetailDto.isActive
     let saved_director_detail = await this.directorDetailRepository.save(director_detail)
     let response: ApiResponse<DirectorDetail> = {
       status: ApiResponseStatus.SUCCESS,
@@ -32,21 +38,23 @@ export class DirectorDetailService {
   }
 
 
-  async inActive(updateDirectorDetailDto:UpdateDirectorDetailDto):Promise<UpdateResult>{
+
+  async inActive(updateDirectorDetailDto:UpdateDirectorDetailDto):Promise<ApiResponse<DirectorDetail>>{
     try {
-    let response:UpdateResult =await this.directorDetailRepository
-    .createQueryBuilder()
-    .update(DirectorDetail)
-    .where({ dsaDirectorId : updateDirectorDetailDto.dsaDirectorId})
-    .set({status:updateDirectorDetailDto.status})
-    .execute();
+    let director_detail_result = await this.directorDetailRepository.findOne({ where: { directorType : updateDirectorDetailDto.directorType,dsaApplicantId:updateDirectorDetailDto.dsaApplicantId,isActive: true} });
+    let director_detail_data = { ...director_detail_result, ...updateDirectorDetailDto };
+    director_detail_data.isActive = updateDirectorDetailDto.isActive
+    // console.log(director_detail_data)
+    let updated_director_detail_data = await this.directorDetailRepository.save(director_detail_data);
+    let response: ApiResponse<DirectorDetail> = {
+      status: ApiResponseStatus.SUCCESS,
+      data: updated_director_detail_data
+    };
     return response;
   } catch (error) {
     console.log(error)
   }
 }
- 
-
 
   async findAll():Promise<ApiResponse<DirectorDetail[]>> {
     let director_detail_result = await this.directorDetailRepository.find()
@@ -62,21 +70,35 @@ export class DirectorDetailService {
     return response;
   }
 
-  async findOne(id: string): Promise<ApiResponse<DirectorDetail>> {
-    let director_detail_result = await this.directorDetailRepository.findOne({ where: { dsaApplicantId: id } });
-    let response: ApiResponse<DirectorDetail>;
-    if (director_detail_result) {
-      response = {
-        status: ApiResponseStatus.SUCCESS,
-        data: director_detail_result
+  async findOne(findDirectorDto: FindDirectorDto): Promise<ApiResponse<DirectorDetail>> {
+    try {
+      if(findDirectorDto.directorType && findDirectorDto.dsaApplicantId){
+        // console.log("findDirectorDto",findDirectorDto)
+        let director_detail_result = await this.directorDetailRepository.find({ where: { dsaApplicantId:findDirectorDto.dsaApplicantId ,directorType:findDirectorDto.directorType,isActive:true} });
+        // console.log(director_detail_result)
+        if(director_detail_result.length===0){
+          throw new HttpException("user not found",404)
+
+        }
+        let response: ApiResponse<DirectorDetail>;
+        if (director_detail_result) {
+          response = {
+            status: ApiResponseStatus.SUCCESS,
+            data: director_detail_result
+          }
+        }
+        else {
+          response = {
+            status: ApiResponseStatus.ERROR
+          }
+        }
+        return response;
+      }else {
+        throw new HttpException("directorType & dsaApplicantId is not found in body",404)
       }
+    } catch (error) {
+      throw error
     }
-    else {
-      response = {
-        status: ApiResponseStatus.ERROR
-      }
-    }
-    return response;
   }
 
 
@@ -92,8 +114,12 @@ export class DirectorDetailService {
     director_detail_data.gender = updateDirectorDetailDto.gender
     director_detail_data.ckycNumber = updateDirectorDetailDto.ckycNumber
     director_detail_data.fathersName = updateDirectorDetailDto.fathersName
+    director_detail_data.mothersName = updateDirectorDetailDto.mothersName
     director_detail_data.highestQualification = updateDirectorDetailDto.highestQualification
     director_detail_data.profession = updateDirectorDetailDto.profession
+    director_detail_data.directorType = updateDirectorDetailDto.directorType
+    director_detail_data.isActive = updateDirectorDetailDto.isActive
+    director_detail_data.dateOfIncorporation = updateDirectorDetailDto.dateOfIncorporation
     let updated_director_detail_data = await this.directorDetailRepository.save(director_detail_data);
     let response: ApiResponse<DirectorDetail> = {
       status: ApiResponseStatus.SUCCESS,

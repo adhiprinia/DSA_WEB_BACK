@@ -13,6 +13,7 @@ import { CONFIG } from 'src/config/config';
 import { addressType, referenceType, SuccessResponse, sumbitApplication } from './dto/submit_application.dto';
 import { DashBoardDto } from './dto/DashBoard.dto';
 import { GetAllQueriesDto } from './dto/get_all_queries.dto';
+import { EzfloApplicationStatus } from './dto/ezflo_application_status.dto';
 
 @Injectable()
 export class EzfloIntegrateService {
@@ -20,10 +21,12 @@ export class EzfloIntegrateService {
     @InjectRepository(AddressDetail) private addressDetailRepository: Repository<AddressDetail>,
     @InjectRepository(BankDetail) private bankDetailRepository: Repository<BankDetail>,
     @InjectRepository(ReferenceDetail) private referenceDetailRepository: Repository<ReferenceDetail>) { }
+
+
   async ezfloCheckQuery(ezfloQueryStatus: EzfloQueryStatus) {
     try {
       // let check_applicant_id = await this.factDsaApplicantDetailRepository.findOne({where:{ applicantId : ezfloQueryStatus.applicantId}})
-      let ezflo_integrate_check_query = await axios.post(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloApplicationStatus`,{ ApplicationID:ezfloQueryStatus.ApplicationID})
+      let ezflo_integrate_check_query = await axios.post(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloApplicationStatus`, { ApplicationID: ezfloQueryStatus.ApplicationID })
       let response = {
         status: ApiResponseStatus.SUCCESS,
         data: ezflo_integrate_check_query.data
@@ -34,18 +37,19 @@ export class EzfloIntegrateService {
       console.log(error.response.data)
     }
   }
-
   async ezfloPullQueryStatus(ezfloQueryStatus: EzfloQueryStatus) {
-    
-    if (!ezfloQueryStatus.ApplicationID){
-      throw new HttpException("please provide DSA APPLICATION ID",404);
+
+    if (!ezfloQueryStatus.ApplicationID) {
+      throw new HttpException("please provide DSA APPLICATION ID", 404);
     }
     try {
-      console.log(ezfloQueryStatus);
-      let ezflo_integrate_pull_query = await axios.post(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloPullOpenQueries`, ezfloQueryStatus,{ headers: { 
-        'Content-Type': 'application/json'
-      }});
-      console.log(ezflo_integrate_pull_query,"llllll")
+      // console.log(ezfloQueryStatus);
+      let ezflo_integrate_pull_query = await axios.post(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloPullOpenQueries`, ezfloQueryStatus, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      // console.log(ezflo_integrate_pull_query, "llllll")
       let response = {
         status: ApiResponseStatus.SUCCESS,
         data: ezflo_integrate_pull_query.data
@@ -54,7 +58,7 @@ export class EzfloIntegrateService {
       return response;
     } catch (error) {
       // error = error?.response?.data || error;
-      if(error){
+      if (error) {
         console.error(error);
         // throw new HttpException(JSON.stringify(error.response),404);
         return error.response.data;
@@ -79,38 +83,47 @@ export class EzfloIntegrateService {
   }
 
   async ezfloSubmitQueryStatus(ezfloQueryStatus: EzfloQueryStatus) {
-    console.log(ezfloQueryStatus.dsaApplicantId,'dsaAppplicationID');
-      if (!ezfloQueryStatus.dsaApplicantId){
-        throw new HttpException("please provide DSA APPLICATION ID",404);
-      }
-      try {
-        let fact_dsa_applicant_detail = await this.factDsaApplicantDetailRepository.findOne({ where: { dsaApplicantId: ezfloQueryStatus.dsaApplicantId } });
+    //// randomr cibili score function 
+    const randomCibil = () => {
+      let min = 600;
+      let max = 780;
+      return Math.floor(Math.random() * (max - min) + min);
+    }
+
+
+    // console.log(ezfloQueryStatus.dsaApplicantId, 'dsaAppplicationID');
+    if (!ezfloQueryStatus.dsaApplicantId) {
+      throw new HttpException("please provide DSA APPLICATION ID", 404);
+    }
+    try {
+
+      let fact_dsa_applicant_detail = await this.factDsaApplicantDetailRepository.findOne({ where: { dsaApplicantId: ezfloQueryStatus.dsaApplicantId } });
       // console.log(fact_dsa_applicant_detail)
-      if(!fact_dsa_applicant_detail ){
-        throw new HttpException("application detials are not found",404);
+      if (!fact_dsa_applicant_detail) {
+        throw new HttpException("application detials are not found", 404);
       }
 
       let address_details = await this.addressDetailRepository.find({ where: { dsaApplicantId: ezfloQueryStatus.dsaApplicantId } })
       // console.log(address_detail)
-      if (!address_details){
-        throw new HttpException("address detials are found",404);
+      if (!address_details) {
+        throw new HttpException("address detials are found", 404);
       }
 
       let bank_detail = await this.bankDetailRepository.findOne({ where: { dsaApplicantId: ezfloQueryStatus.dsaApplicantId } })
-      if (!bank_detail){
-        throw new HttpException("bank details are found",404);
+      if (!bank_detail) {
+        throw new HttpException("bank details are found", 404);
       }
 
       let reference_details = await this.referenceDetailRepository.find({ where: { dsaApplicantId: ezfloQueryStatus.dsaApplicantId } })
       // console.log(reference_detail)
-      if (!reference_details){
-        throw new HttpException("reference detials are found",404);
+      if (!reference_details) {
+        throw new HttpException("reference detials are found", 404);
       }
 
       // let addresses: addressType[] = [];
       /// mapping addresses
-      
-    
+
+
       const addresses: addressType[] = address_details.map(address_detail => ({
         addressType: address_detail.addressType,
         addressL1: address_detail.addressLine1,
@@ -131,7 +144,7 @@ export class EzfloIntegrateService {
       // mapping refererenced
       // let references: referenceType[] = [];
 
-      const references: referenceType[] = reference_details.map( reference_detail => ({
+      const references: referenceType[] = reference_details.map(reference_detail => ({
         name: reference_detail.name,
         mobileNo: reference_detail.mobileNo,
         companyEmail: '',
@@ -140,9 +153,9 @@ export class EzfloIntegrateService {
       /// 
 
       /// mapping relations
-        /// not now for demo
+      /// not now for demo
       ///
-      
+
 
       let mybody: sumbitApplication = {
         "DSAOrReferral": fact_dsa_applicant_detail.partnerType,
@@ -154,8 +167,8 @@ export class EzfloIntegrateService {
         "addresses": addresses,
         "salutation": fact_dsa_applicant_detail.salutation,
         "name": fact_dsa_applicant_detail.fullName,
-        "photo": "DMSID",
-        "DOB": fact_dsa_applicant_detail.dateOfBirth.toDateString(),
+        "photo": fact_dsa_applicant_detail.applicantPhoto,
+        "DOB": "",
         "fatherName": fact_dsa_applicant_detail.fathersName,
         "gender": fact_dsa_applicant_detail.gender,
         "accountHolderName": bank_detail.accountHolder,
@@ -175,8 +188,8 @@ export class EzfloIntegrateService {
           /* not now for demo */
         ],
         "CIBIL": {
-          "timestamp": "2022-03-22 04:00:00",
-          "score": 150
+          "timestamp": fact_dsa_applicant_detail.cibilDateAndTime,
+          "score": Number(fact_dsa_applicant_detail.cibilScore)
         },
         "dateOfIncorporation": "",
         "partnerType": fact_dsa_applicant_detail.partnerType,
@@ -197,40 +210,53 @@ export class EzfloIntegrateService {
       //
       // console.log("\n//////]\n",JSON.stringify(mybody,null,3),"\n//////]\n");
       //
-      console.log(ezfloQueryStatus.dsaApplicantId,"ezfloQueryStatus.dsaApplicantId");
+      // console.log(ezfloQueryStatus.dsaApplicantId, "ezfloQueryStatus.dsaApplicantId");
 
       let ezflo_integrate_submit_query = await axios.post<SuccessResponse>(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloSubmit`, mybody)
-
+      //  console.log(mybody)
       // console.log(JSON.stringify(mybody,null,3));
       /*
         neeed to check the below line if response changes
       */
-     console.log(ezflo_integrate_submit_query);
+      //  console.log(ezflo_integrate_submit_query);
       let applicant_id = ezflo_integrate_submit_query.data["Application_No"];
-      console.log(applicant_id);
+      // console.log(applicant_id);
+      // data.ApplicationNo
 
       let fact_dsa_applicant_detail_save = await this.factDsaApplicantDetailRepository
-      .createQueryBuilder()
-      .update(FactDsaApplicantDetail)
-      .where({dsaApplicantId:ezfloQueryStatus.dsaApplicantId})
-      .set({
-          applicantId:applicant_id
+        .createQueryBuilder()
+        .update(FactDsaApplicantDetail)
+        .where({ dsaApplicantId: ezfloQueryStatus.dsaApplicantId })
+        .set({
+          applicantId: applicant_id
         })
-      .execute()
+        .execute()
+
+      let applicant_check_status = await axios.post<any, EzfloApplicationStatus>(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloApplicationStatus`, { ApplicationID: applicant_id });
+      let applicant_status = applicant_check_status.data.ApplicationData.map(application_data => application_data.ApplicationStatus).join();
+      // console.log(applicant_status);
+      let fact_dsa_applicant_detail_status = await this.factDsaApplicantDetailRepository
+        .createQueryBuilder()
+        .update(FactDsaApplicantDetail)
+        .where({ dsaApplicantId: ezfloQueryStatus.dsaApplicantId })
+        .set({
+          apiResponse: applicant_status
+        })
+        .execute()
 
       // console.log("applicant_id",applicant_id);
-
-
       let response = {
         status: ApiResponseStatus.SUCCESS,
-        data: ezflo_integrate_submit_query.data
+        // data: ezflo_integrate_submit_query.data
+        data: mybody
+
       };
       return response;
     } catch (error) {
       //// throwing error;
       console.log(error);
       // console.log(error.message);
-      if(error){
+      if (error) {
         throw error;
       }
 
@@ -238,67 +264,75 @@ export class EzfloIntegrateService {
     }
   }
 
- /// dsa specified versions of ezflo integrate
- async getDashboard(dashBoardDto : DashBoardDto){
-  if (!dashBoardDto.ApplicationID){
-    throw new HttpException("please provide DSA APPLICATION ID",404);
-  }
+  /// dsa specified versions of ezflo integrate
+  async getDashboard(dashBoardDto: DashBoardDto) {
+    if (!dashBoardDto.ApplicationID) {
+      throw new HttpException("please provide DSA APPLICATION ID", 404);
+    }
     try {
       let ezflo_integrate_pull_query = await this.getAllQueries(dashBoardDto);
-      let applicationDetails = await axios.post(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloApplicationStatus`, {ApplicationID:dashBoardDto.ApplicationID},{ headers: { 
-        'Content-Type': 'application/json'
-      }});
-      const body = {...ezflo_integrate_pull_query.data, ...applicationDetails.data};
-      console.log(ezflo_integrate_pull_query.data,applicationDetails.data);
+      let applicationDetails = await axios.post(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloApplicationStatus`, { ApplicationID: dashBoardDto.ApplicationID }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const body = { ...ezflo_integrate_pull_query.data, ...applicationDetails.data };
+      // console.log(ezflo_integrate_pull_query.data, applicationDetails.data);
       // console.log(body);
 
-      return {status : "Ok",...body};
-  }
-  catch(err){
-    console.log(err);
-    return err.response.data;
-  }
-}
-
-async getAllQueries(getAllQueriesDto : GetAllQueriesDto) {
-
-  /// request objects
-  let openQueryReq = axios.post(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloPullOpenQueries`, 
-  {ApplicationID : getAllQueriesDto.ApplicationID, QueryStatus:"Open"},
-  { headers: { 
-    'Content-Type': 'application/json'
-  }});
-
-  let InReviewQueryReq = axios.post(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloPullOpenQueries`, 
-  {ApplicationID : getAllQueriesDto.ApplicationID, QueryStatus:"In Progress"},
-  { headers: { 
-    'Content-Type': 'application/json'
-  }});
-
-  let resolvedReq = axios.post(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloPullOpenQueries`, 
-  {ApplicationID: getAllQueriesDto.ApplicationID, QueryStatus:"Completed"},
-  { headers: { 
-    'Content-Type': 'application/json'
-  }});
-
-  try {
-    //// awaiting for all requests(promise)
-    const [openRes,InReviewRes,ResolvedRes] = await Promise.allSettled([openQueryReq,InReviewQueryReq,resolvedReq]);
-  
-    return {
-      status : "Ok",
-      data : {
-        Open : openRes.status === "fulfilled" ? openRes.value.data :"Error",
-        InReview :InReviewRes.status === "fulfilled" ? InReviewRes.value.data :"Error",
-        Resolved : ResolvedRes.status === "fulfilled" ? ResolvedRes.value.data :"Error",
-      }
+      return { status: "Ok", ...body };
+    }
+    catch (err) {
+      console.log(err);
+      return err.response.data;
     }
   }
-  catch(err){
-    console.log(err);
-    throw new HttpException(err.message,404);
-  }
 
-}
+  async getAllQueries(getAllQueriesDto: GetAllQueriesDto) {
+
+    /// request objects
+    let openQueryReq = axios.post(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloPullOpenQueries`,
+      { ApplicationID: getAllQueriesDto.ApplicationID, QueryStatus: "Open" },
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+    let InReviewQueryReq = axios.post(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloPullOpenQueries`,
+      { ApplicationID: getAllQueriesDto.ApplicationID, QueryStatus: "In Progress" },
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+    let resolvedReq = axios.post(`${CONFIG.EZFLO_BACKEND_HOST}/ezfloPullOpenQueries`,
+      { ApplicationID: getAllQueriesDto.ApplicationID, QueryStatus: "Completed" },
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+    try {
+      //// awaiting for all requests(promise)
+      const [openRes, InReviewRes, ResolvedRes] = await Promise.allSettled([openQueryReq, InReviewQueryReq, resolvedReq]);
+
+      return {
+        status: "Ok",
+        data: {
+          Open: openRes.status === "fulfilled" ? openRes.value.data : "Error",
+          InReview: InReviewRes.status === "fulfilled" ? InReviewRes.value.data : "Error",
+          Resolved: ResolvedRes.status === "fulfilled" ? ResolvedRes.value.data : "Error",
+        }
+      }
+    }
+    catch (err) {
+      console.log(err);
+      throw new HttpException(err.message, 404);
+    }
+
+  }
 
 }

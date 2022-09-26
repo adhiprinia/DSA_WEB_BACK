@@ -18,6 +18,9 @@ import { DirectorDetailModule } from './director_detail/director_detail.module';
 import { ApplicationStatus } from './application_status/entities/application_status.entity';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { CibilDetModule } from './cibil_det/cibil_det.module';
+import { ListOfPartnerModule } from './list_of_partner/list_of_partner.module';
+import { ResourceInfoUploadModule } from './resource_info_upload/resource_info_upload.module';
 
 @Module({
   imports: [
@@ -53,12 +56,12 @@ import { diskStorage } from 'multer';
     ApplicationStatusModule,
     ResourceInfoModule,
     EzfloIntegrateModule,
-    ApplicationStatus,
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname,'..','client'),
-}), 
+    ApplicationStatus,  
     ProgressBarModule,
-    DirectorDetailModule],
+    DirectorDetailModule,
+    CibilDetModule,
+    ListOfPartnerModule,
+    ResourceInfoUploadModule],
     
   controllers: [AppController],
   providers: [AppService],

@@ -65,6 +65,11 @@ export class FactDsaApplicantDetail {
     })
     constitutionType: string;
 
+    @Column({
+        name:'api_response'
+    })
+    apiResponse:string
+
     ///kyc details
 
     @Column({
@@ -98,11 +103,7 @@ export class FactDsaApplicantDetail {
     // })
     // aadhaarVerify:string;
 
-    
-    @Column({
-        name:'status_name'
-    })
-    ezflowStatus:string;
+
 
     @Column({
         name: 'gst_applicable'
@@ -143,6 +144,11 @@ export class FactDsaApplicantDetail {
         name: 'applicant_photo'
     })
     applicantPhoto: string
+
+    @Column({
+        name: 'take_photo'
+    })
+    takePhoto: string
 
    ///personal details
 
@@ -193,15 +199,7 @@ export class FactDsaApplicantDetail {
 
 
 
-    @Column({
-        name: 'cibil_score'
-    })
-    cibilScore: string;
 
-    @Column({
-        name: 'cibil_requested_date_and_time'
-    })
-    cibilDateAndTime: string;
 
     @Column({
         name: 'apllicant_details_entd_by'
@@ -241,5 +239,31 @@ export class FactDsaApplicantDetail {
         default:()=>true
     })
     factDsaApplicantDetailisActive:boolean;
+    @Column({
+        name:'gst_entd_time',
+ 
+    })
+    gstenteron:Date
+    @Column({
+        name:'msme_entd_time',
+ 
+    })
+    msmeenteron:Date
+    @Column({
+        name:'trin_entd_time',
+ 
+    })
+    trinenteron:Date
+
+    ///cibil details
+    @Column({
+        name: 'cibil_score'
+    })
+    cibilScore: string;
+
+    @Column({
+        name: 'cibil_requested_date_and_time'
+    })
+    cibilDateAndTime: string;
 
 }

@@ -1,9 +1,11 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { IsNotEmpty } from 'class-validator';
 import { ApiResponse, ApiResponseStatus } from 'src/config/response';
 import { ProgressBar } from 'src/progress_bar/entities/progress_bar.entity';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, IsNull, Repository } from 'typeorm';
 import { CreateApplicationStatusDto } from './dto/create-application_status.dto';
+import { FindProgressBar } from './dto/find-progress-bar.dto';
 import { UpdateApplicationStatusDto } from './dto/update-application_status.dto';
 import { ApplicationStatus } from './entities/application_status.entity';
 
@@ -46,8 +48,12 @@ export class ApplicationStatusService {
     }
     return response;
   }
-  async findProgressBar(id: string): Promise<ApiResponse<ApplicationStatus>> {
-    let application_status_result = await this.applicationStatusRepository.findOne({ where: { dsaApplicantId: id } })
+  async findProgressBar(findProgressBar: FindProgressBar): Promise<ApiResponse<ApplicationStatus>> {
+    // if (findProgressBar.currentCode === "") {
+    //   console.log("sdsw")
+    // }
+    let application_status_result = await this.applicationStatusRepository.findOne({ where: { dsaApplicantId: findProgressBar.dsaApplicantId } })
+    
     let responsData = [];
     responsData.push({
       "application_status_result": application_status_result,
@@ -56,10 +62,32 @@ export class ApplicationStatusService {
       status: ApiResponseStatus.SUCCESS,
       data: responsData
     }
+    // console.log(response, "???")
     return response;
   }
+
+  async findProgressStepper(findProgressBar: FindProgressBar): Promise<ApiResponse<ApplicationStatus>> {
+    let findProgressStepper = await this.progressBarRepository
+      .createQueryBuilder()
+      .select(['current_code', 'current_stage', 'previous_stage', 'next_stage'])
+      .where('current_code =:currentCode', { currentCode: findProgressBar.currentCode })
+      .execute()
+    let responsData = [];
+    responsData.push({
+      "findProgressStepper": findProgressStepper
+    });
+    let response: ApiResponse<ApplicationStatus> = {
+      status: ApiResponseStatus.SUCCESS,
+      data: responsData
+    }
+    // console.log(response, "???")
+    return response;
+  }
+
+
+
   async findOpportunities(): Promise<ApiResponse<ApplicationStatus[]>> {
-    let application_status_result = await this.applicationStatusRepository.find({ where: { currentCode : '0' } })
+    let application_status_result = await this.applicationStatusRepository.find({ where: { currentCode: '0' } })
     let responsData = [];
     responsData.push({
       // "application_status_result": application_status_result,
@@ -72,23 +100,21 @@ export class ApplicationStatusService {
     return response;
   }
   async findLead(): Promise<ApiResponse<ApplicationStatus[]>> {
-    // let count = ["1","2","3","4","5","6","7","8"]
     let application_status_results = await this.applicationStatusRepository
-    .createQueryBuilder()
-    .where('current_code =:currentCode',{currentCode:"9"})
-    .getCount()   
-     
+      .createQueryBuilder()
+      .where('current_code =:currentCode', { currentCode: "9" })
+      .getCount()
+
     let application_status_result = await this.applicationStatusRepository
-    .createQueryBuilder()
-    .where('current_code !=:currentCode',{currentCode:"0"})
-    .getCount()
+      .createQueryBuilder()
+      .where('current_code !=:currentCode', { currentCode: "0" })
+      .getCount()
     let count = application_status_result - application_status_results
     let countToString = count.toString()
     let responsData = [];
     responsData.push({
       "application_status_results": countToString,
-      // "application_status_result":application_status_result
-   });
+    });
     let response: ApiResponse<ApplicationStatus[]> = {
       status: ApiResponseStatus.SUCCESS,
       data: responsData
@@ -104,27 +130,27 @@ export class ApplicationStatusService {
       // console.log("page_code",page_code)
       // console.log("appli",createApplicationStatusDto.dsaApplicantId)
       let application_status_result = await this.applicationStatusRepository.findOne({ where: { dsaApplicantId: createApplicationStatusDto.dsaApplicantId } });
-      console.log(application_status_result,">>>")
-      if(application_status_result === null){
+      // console.log(application_status_result, ">>>")
+      if (application_status_result === null) {
         let response: ApiResponse<ApplicationStatus>;
         response = {
           status: ApiResponseStatus.ERROR
         }
-      }else if (application_status_result.currentCode === null){
+      } else if (application_status_result.currentCode === null) {
         let response: ApiResponse<ApplicationStatus>;
         response = {
           status: ApiResponseStatus.ERROR
         }
-      }  
+      }
       let current_code = application_status_result.currentCode
-      console.log("current_code", current_code)
+      // console.log("current_code", current_code)
       // console.log("pagecode",createApplicationStatusDto.code)
       let progress_bar = await this.progressBarRepository.findOne({ where: { currentCode: current_code } })
       // console.log(progress_bar,"progress")
       if (progress_bar === null) {
         throw new HttpException("completed", 404)
       }
-      else if (current_code<=page_code) {
+      else if (current_code <= page_code) {
         // console.log("calle")
         let application_status_results = await this.applicationStatusRepository
 
@@ -160,7 +186,7 @@ export class ApplicationStatusService {
         }
       }
       return response;
-    
+
     } catch (error) {
       throw error
     }

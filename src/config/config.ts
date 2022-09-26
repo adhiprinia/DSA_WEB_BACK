@@ -42,6 +42,8 @@ export const CONFIG = Object.freeze({
     VERIFY_BACKEND_HOST_AAHAAR_CARD_POPULATE:"http://3.8.197.170:8082/integration-service/api/aadhaar-otp",
     VERIFY_BACKEND_HOST_AAHAAR_CARD_VERIFY:"http://3.8.197.170:8082/integration-service/api/Dsa-aadhaar-xml",
     VERIFY_BACKEND_HOST_PAN_CARD_VERIFY: "http://3.8.197.170:8082/integration-service/api/pancard",
+    // EZFLO_BACKEND_HOST:"http://localhost:8086",
     EZFLO_BACKEND_HOST:"http://3.8.18.109:8086"
+    // CIBIL_DETAIL_HOTS:"http://192.168.0.100:8088"
 
 });

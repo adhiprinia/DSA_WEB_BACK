@@ -9,7 +9,11 @@ export class CreateDirectorDetailDto {
     gender:string;
     ckycNumber:string;
     fathersName:string;
+    fullName:string;
     mothersName:string;
     highestQualification:string;
     profession:string;
+    isActive:boolean
+    directorType:string
+    dateOfIncorporation:Date
 }
